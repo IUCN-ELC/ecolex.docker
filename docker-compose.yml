@@ -11,7 +11,7 @@ solr1:
     links:
         - zk
     ports:
-        - 8983:8983
+        - 8984:8983
     command:
         /opt/solr/bin/solr start -f -z zk:2181
 solr2:
@@ -19,7 +19,7 @@ solr2:
     links:
         - zk
     ports:
-        - 8984:8983
+        - 8985:8983
     command:
         /opt/solr/bin/solr start -f -z zk:2181
 solr3:
@@ -27,19 +27,20 @@ solr3:
     links:
         - zk
     ports:
-        - 8985:8983
+        - 8986:8983
     command:
         /opt/solr/bin/solr start -f -z zk:2181
 
 web:
-    build:./ecolex-prototype
+    build: 
+        ./ecolex-prototype
+    env_file: 
+        ./env
     ports:
         - 8000:8000
     command:
-        - python manage.py runserver 0.0.0.0:8000
+        bash -c "python /ecolex/manage.py treaties_cache && python /ecolex/manage.py runserver 0.0.0.0:8000"
     links:
         - solr1
-    env_file:
-        - ./env
     volumes:
         - ./ecolex-prototype/:/ecolex
