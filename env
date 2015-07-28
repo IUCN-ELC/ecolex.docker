@@ -1,2 +1,2 @@
 APP_PORT=8000
-SOLR_URI='http://10.0.0.98:8983/solr/ecolex'
+SOLR_URI=http://10.0.0.98:8983/solr/ecolex
