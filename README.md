@@ -53,29 +53,30 @@ directory:
 
 1. Clone the repository:
 
-    git clone https://github.com/eaudeweb/ecolex.docker.git --recursive
-    cd ecolex.docker
+        git clone https://github.com/eaudeweb/ecolex.docker.git --recursive
+        cd ecolex.docker
 
 2. Modify `docker-compose.yml` according to your needs:
 
-    ports:
-        - 8984:[public_port]
-    command:
-        /opt/solr/bin/solr start -f -z zk:2181 -h [public_ip] -p [public_port]
+        ports:
+            - 8984:[public_port]
+        command:
+            /opt/solr/bin/solr start -f -z zk:2181 -h [public_ip] -p [public_port]
 
 
 3. Run docker container:
 
-    sudo docker-compose up
+        sudo docker-compose up
 
 4. Make sure the public IP is visible from inside the docker container:
 
-    sudo docker exec -i -t ecolexdocker_solr1_1
-    curl [public_ip]:8984
 
-    # If the answer is "No route to host", add the following iptables rule
-    sudo iptables -I INPUT -s 0.0.0.0/0 -d 0.0.0.0/0 -i docker0 -m addrtype
-    --dst-type LOCAL -j ACCEPT
+        sudo docker exec -i -t ecolexdocker_solr1_1
+        curl [public_ip]:8984
+
+    If the answer is "No route to host", add the following iptables rule
+    
+        sudo iptables -I INPUT -s 0.0.0.0/0 -d 0.0.0.0/0 -i docker0 -m addrtype --dst-type LOCAL -j ACCEPT
 
 
 Contacts
@@ -85,14 +86,3 @@ People involved in this project:
 
 * Alex Eftimie (alex.eftimie at eaudeweb.ro)
 * Iulia Chiriac (iulia.chiriac at eaudeweb.ro)
-
-
-Copyright and license
-=====================
-
-This project is free software; you can redistribute it and/or modify it under
-the terms of the EUPL v1.1.
-
-More details under `LICENSE.txt`_.
-
-.. _`LICENSE.txt`: https://github.com/eea/art17-consultation/blob/master/LICENSE.txt
