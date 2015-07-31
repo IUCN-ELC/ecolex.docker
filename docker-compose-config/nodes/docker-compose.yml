@@ -1,0 +1,8 @@
+solr1:
+    image: makuk66/docker-solr:5.2.1
+    links:
+        - zk
+    ports:
+        - 8984:8984
+    command:
+        /opt/solr/bin/solr start -f -z [ZK_IP]:2181 -h [PUBLIC_IP] -p 8984
