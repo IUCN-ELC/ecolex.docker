@@ -38,9 +38,11 @@ Create a new user:
 
     useradd ecolex -d /var/local/ecolex
 
-Give root access to the user (TODO: make it work without this step):
+Create a docker group and add ecolex to it:
 
-    visudo
+    sudo groupadd docker
+    sudo usermod -aG docker ecolex
+    sudo service docker restart
 
 
 Install dependencies
@@ -66,16 +68,16 @@ directory:
 
 3. Run docker container:
 
-        sudo docker-compose up
+        docker-compose up
 
 4. Make sure the public IP is visible from inside the docker container:
 
 
-        sudo docker exec -i -t ecolexdocker_solr1_1
+        docker exec -i -t ecolexdocker_solr1_1
         curl [public_ip]:8984
 
     If the answer is "No route to host", add the following iptables rule
-    
+
         sudo iptables -I INPUT -s 0.0.0.0/0 -d 0.0.0.0/0 -i docker0 -m addrtype --dst-type LOCAL -j ACCEPT
 
 
