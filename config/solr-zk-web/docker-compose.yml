@@ -1,17 +1,22 @@
 zk:
     restart: always
-    image: jplock/zookeeper:3.4.6
+    image: eaudeweb/zookeeper
+    environment:
+        - MYID=[id of current server in hostnames list]
+        - HOSTNAMES=[server1;server2;server3]
     ports:
         - 2181:2181
+        - 2888:2888
+        - 3888:3888
 
-solr1:
+solr:
     image: makuk66/docker-solr:5.2.1
     links:
         - zk
     ports:
-        - 8984:8984
+        - 8983:8983
     command:
-        /opt/solr/bin/solr start -f -z zk:2181 -h [PUBLIC_IP] -p 8984
+        /opt/solr/bin/solr start -f -z zk:2181 -h [public_ip] -p 8983
 
 web:
     build:
@@ -23,6 +28,6 @@ web:
     command:
         bash -c "python /ecolex/manage.py treaties_cache && python /ecolex/manage.py runserver 0.0.0.0:8000"
     links:
-        - solr1
+        - solr
     volumes:
         - ./ecolex-prototype/:/ecolex
