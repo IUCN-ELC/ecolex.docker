@@ -58,23 +58,58 @@ directory:
         git clone https://github.com/eaudeweb/ecolex.docker.git --recursive
         cd ecolex.docker
 
-2. Modify `docker-compose.yml` according to your needs:
+1. Choose the appropriate `docker-compose.yml` file from the `config` directory 
+   and copy it to the project directory:
 
-        ports:
-            - 8984:[public_port]
-        command:
-            /opt/solr/bin/solr start -f -z zk:2181 -h [public_ip] -p [public_port]
+        cp config/solr-zk/docker-compose.yml .
+        
+   The agreed setup contains 4 servers:
 
+    * one that keeps the web application, a Solr node, and a ZooKeeper node
+    * three that correspond to the data sources and run Solr nodes; 2 out of these 3 
+      servers will also host a ZooKeeper node
+      
+    In conclusion, there will be 3 categories of Docker Compose config files:
+    * Web + Solr + ZK
+    * Solr + ZK
+    * ZK
+    
+1. Modify `docker-compose.yml` according to your needs:
+    
+    * ZK component:
+    
+            environment: 
+                - MYID=[id of current server in hostnames list]
+                - HOSTNAMES=[server1;server2;server3]
 
-3. Run docker container:
+    where **HOSTNAMES** is a list of the public IPs of all servers that act as ZooKeeper nodes,
+    separated by `;`. For the current machine, use `0.0.0.0` instead of the public IP. 
+    **MYID** is the index of the current server in this list, starting with 1.
+    
+    Example:
+    
+        environment: 
+            - MYID=2
+            - HOSTNAMES=75.75.75.75;0.0.0.0;75.75.75.76
+            
+    * Solr component:
+    
+            command:                                                                    
+                /opt/solr/bin/solr start -f -z [zk_server]:2181 -h [public_ip] -p 8983
+                
+    Replace `[zk_server]` with the public IP of one of the ZooKeeper nodes (if docker-compose 
+    also contains a `zk` component, this component will be linked to it, and `[zk_server]` 
+    will be replaced by `zk`) and `[public_ip]` with the current server's public IP.
+
+1. Run docker container:
 
         docker-compose up
 
-4. Make sure the public IP is visible from inside the docker container:
+1. Make sure the public IP is visible from inside the docker container:
 
 
         docker exec -i -t ecolexdocker_solr1_1
-        curl [public_ip]:8984
+        curl [public_ip]:8983
 
     If the answer is "No route to host", add the following iptables rule
 
