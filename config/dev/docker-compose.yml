@@ -1,0 +1,29 @@
+zk:
+   restart: always
+   image: jplock/zookeeper:3.4.6
+   ports:
+       - 2181:2181
+
+solr:
+    image: makuk66/docker-solr:5.2.1
+    links:
+        - zk
+    ports:
+        - 8983:8983
+    command:
+        /opt/solr/bin/solr start -f -z zk:2181 -p 8983
+
+web:
+    build:
+        ./ecolex-prototype
+    env_file:
+        ./.env
+    ports:
+        - 8000:8000
+    command:
+        #bash -c "python /ecolex/manage.py treaties_cache && python /ecolex/manage.py runserver 0.0.0.0:8000"
+        bash -c "python /ecolex/manage.py runserver 0.0.0.0:8000"
+    links:
+        - solr
+    volumes:
+        - ./ecolex-prototype/:/ecolex
