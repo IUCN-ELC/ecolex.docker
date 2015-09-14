@@ -1,0 +1,19 @@
+zk:
+    restart: always
+    image: eaudeweb/zookeeper
+    environment:
+        - MYID=[id of current server in hostnames list]
+        - HOSTNAMES=[server1;server2;server3]
+    ports:
+        - 2181:2181
+        - 2888:2888
+        - 3888:3888
+
+solr:
+    image: makuk66/docker-solr:5.2.1
+    links:
+        - zk
+    ports:
+        - 8983:8983
+    command:
+        /opt/solr/bin/solr start -f -z zk:2181 -h [public_ip] -p 8983
