@@ -532,9 +532,9 @@
                and old cache.  
       -->
     <filterCache class="solr.FastLRUCache"
-                 size="512"
-                 initialSize="512"
-                 autowarmCount="0"/>
+                 size="16384"
+                 initialSize="4096"
+                 autowarmCount="4096"/>
 
     <!-- Query Result Cache
          
@@ -542,9 +542,9 @@
          (DocList) based on a query, a sort, and the range of documents requested.  
       -->
     <queryResultCache class="solr.LRUCache"
-                     size="512"
-                     initialSize="512"
-                     autowarmCount="0"/>
+                     size="16384"
+                     initialSize="4096"
+                     autowarmCount="4096"/>
    
     <!-- Document Cache
 
@@ -553,9 +553,9 @@
          this cache will not be autowarmed.  
       -->
     <documentCache class="solr.LRUCache"
-                   size="512"
-                   initialSize="512"
-                   autowarmCount="0"/>
+                   size="16384"
+                   initialSize="4096"
+                   autowarmCount="4096"/>
     
     <!-- custom cache currently used by block join --> 
     <cache name="perSegFilter"

@@ -18,12 +18,11 @@ solr:
 web:
     build:
         ./ecolex-prototype
-    env_file:
-        ./.env
+    environment:
+        - SOLR_URI=http://solr:8983/solr/ecolex
     ports:
         - 8000:8000
     command:
-        #bash -c "python /ecolex/manage.py treaties_cache && python /ecolex/manage.py runserver 0.0.0.0:8000"
         bash -c "python /ecolex/manage.py runserver 0.0.0.0:8000"
     links:
         - solr

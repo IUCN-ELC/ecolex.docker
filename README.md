@@ -116,6 +116,42 @@ directory:
         sudo iptables -I INPUT -s 0.0.0.0/0 -d 0.0.0.0/0 -i docker0 -m addrtype --dst-type LOCAL -j ACCEPT
 
 
+Development Setup
+-----------------
+
+To setup a local development, one must follow the next steps:
+ 
+1. Copy docker-compose.yml from config/dev/
+
+        cp config/dev/docker-compose.yml .
+
+1. Download a Solr core and unzip it inside solrconfig/ecolex/data
+    
+        cd solrconfigs/ecolex/
+        wget http://ecolex-frontend.edw.lan/data.tgz
+        tar xvf data.tgz
+
+1. Change permissions on data, give all users access:
+
+        chmod -R a+w solrconfigs/ecolex/data/
+
+1. Start the 3 instances (zk, solr, web):
+
+        docker-compose up
+
+1. Link solr with zk (Run this inside the running solr container):
+
+        docker exec -it ecolexdocker_solr_1 bash
+        cd server/
+        scripts/cloud-scripts/zkcli.sh -cmd upconfig -zkhost zk:2181 -d solr/ecolex/conf/ -n ecolex_conf
+        scripts/cloud-scripts/zkcli.sh -cmd linkconfig -zkhost zk:2181 -collection ecolex_collection -confname ecolex_conf -solrhome solr
+        scripts/cloud-scripts/zkcli.sh -cmd bootstrap -zkhost zk:2181 -solrhome solr
+
+1. Restart containers
+
+        docker-compose stop
+        docker-compose up
+
 Contacts
 ========
 
