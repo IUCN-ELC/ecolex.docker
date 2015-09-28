@@ -6,8 +6,6 @@ zk:
 
 solr:
     build: ./config/dev/solr
-    volumes: 
-        - ./solrconfigs/ecolex/:/opt/solr/server/solr/ecolex
     links:
         - zk
     ports:

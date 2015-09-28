@@ -58,47 +58,47 @@ directory:
         git clone https://github.com/eaudeweb/ecolex.docker.git --recursive
         cd ecolex.docker
 
-1. Choose the appropriate `docker-compose.yml` file from the `config` directory 
+1. Choose the appropriate `docker-compose.yml` file from the `config` directory
    and copy it to the project directory:
 
         cp config/solr-zk/docker-compose.yml .
-        
+
    The agreed setup contains 4 servers:
 
     * one that keeps the web application, a Solr node, and a ZooKeeper node
-    * three that correspond to the data sources and run Solr nodes; 2 out of these 3 
+    * three that correspond to the data sources and run Solr nodes; 2 out of these 3
       servers will also host a ZooKeeper node
-      
+
     In conclusion, there will be 3 categories of Docker Compose config files:
     * Web + Solr + ZK
     * Solr + ZK
     * ZK
-    
+
 1. Modify `docker-compose.yml` according to your needs:
-    
+
     * ZK component:
-    
-            environment: 
+
+            environment:
                 - MYID=[id of current server in hostnames list]
                 - HOSTNAMES=[server1;server2;server3]
 
     where **HOSTNAMES** is a list of the public IPs of all servers that act as ZooKeeper nodes,
-    separated by `;`. For the current machine, use `0.0.0.0` instead of the public IP. 
+    separated by `;`. For the current machine, use `0.0.0.0` instead of the public IP.
     **MYID** is the index of the current server in this list, starting with 1.
-    
+
     Example:
-    
-        environment: 
+
+        environment:
             - MYID=2
             - HOSTNAMES=75.75.75.75;0.0.0.0;75.75.75.76
-            
+
     * Solr component:
-    
-            command:                                                                    
+
+            command:
                 /opt/solr/bin/solr start -f -z [zk_server]:2181 -h [public_ip] -p 8983
-                
-    Replace `[zk_server]` with the public IP of one of the ZooKeeper nodes (if docker-compose 
-    also contains a `zk` component, this component will be linked to it, and `[zk_server]` 
+
+    Replace `[zk_server]` with the public IP of one of the ZooKeeper nodes (if docker-compose
+    also contains a `zk` component, this component will be linked to it, and `[zk_server]`
     will be replaced by `zk`) and `[public_ip]` with the current server's public IP.
 
 1. Run docker container:
@@ -120,26 +120,22 @@ Development Setup
 -----------------
 
 To setup a local development, one must follow the next steps:
- 
+
 1. Copy docker-compose.yml from config/dev/
 
         cp config/dev/docker-compose.yml .
 
-1. Download a Solr core and unzip it inside solrconfig/ecolex/data
-    
-        cd solrconfigs/ecolex/
+2. Download a Solr core and unzip it inside solrconfig/ecolex/data
+
+        cd config/dev/solr/ecolex
         wget http://ecolex-frontend.edw.lan/data.tgz
         tar xvf data.tgz
 
-1. Change permissions on data, give all users access:
-
-        chmod -R a+w solrconfigs/ecolex/data/
-
-1. Start the 3 instances (zk, solr, web):
+3. Start the 3 instances (zk, solr, web):
 
         docker-compose up
 
-1. Link solr with zk (Run this inside the running solr container):
+4. Link solr with zk (Run this inside the running solr container):
 
         docker exec -it ecolexdocker_solr_1 bash
         cd server/
@@ -147,7 +143,7 @@ To setup a local development, one must follow the next steps:
         scripts/cloud-scripts/zkcli.sh -cmd linkconfig -zkhost zk:2181 -collection ecolex_collection -confname ecolex_conf -solrhome solr
         scripts/cloud-scripts/zkcli.sh -cmd bootstrap -zkhost zk:2181 -solrhome solr
 
-1. Restart containers
+5. Restart containers
 
         docker-compose stop
         docker-compose up

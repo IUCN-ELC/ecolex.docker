@@ -1,3 +1,6 @@
 FROM makuk66/docker-solr:5.2.1
 
-VOLUME "/opt/solr/server/solr/ecolex"
+ADD "ecolex" "/opt/solr/server/solr/ecolex"
+USER root
+RUN chown -R $SOLR_USER:$SOLR_USER /opt/solr/server/solr/ecolex
+USER $SOLR_USER
