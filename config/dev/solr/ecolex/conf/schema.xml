@@ -264,13 +264,14 @@
     <field name="litDateOfEntry" type="tdate" indexed="true" stored="true"/>
     <field name="litDateOfModification" type="tdate" indexed="true" stored="true"/>
     <field name="litTitleAbbreviation" type="string" indexed="true" stored="true"/>
+    <field name="litRelatedWebSite" type="string" indexed="false" stored="true"/>
 
-    <field name="litLongTitle_en" type="string" indexed="true" stored="true"/>
+    <field name="litLongTitle" type="string" indexed="true" stored="true"/>
     <field name="litLongTitle_fr" type="string" indexed="true" stored="true"/>
     <field name="litLongTitle_sp" type="string" indexed="true" stored="true"/>
     <field name="litLongTitle_other" type="string" indexed="true" stored="true"/>
 
-    <field name="litPaperTitleOfText_en" type="string" indexed="true" stored="true"/>
+    <field name="litPaperTitleOfText" type="string" indexed="true" stored="true"/>
     <field name="litPaperTitleOfText_fr" type="string" indexed="true" stored="true"/>
     <field name="litPaperTitleOfText_sp" type="string" indexed="true" stored="true"/>
     <field name="litPaperTitleOfText_other" type="string" indexed="true" stored="true"/>
@@ -322,9 +323,9 @@
     <field name="litCountry_sp" type="string" indexed="true" stored="true"/>
     <field name="litDisplayTitle" type="string" indexed="true" stored="true"/>
     <field name="litDisplayDetails" type="string" indexed="true" stored="true"/>
-    <field name="displayregion" type="string" indexed="true" stored="true"/>
-    <field name="displayregion_fr_fr" type="string" indexed="true" stored="true"/>
-    <field name="displayregion_es_es" type="string" indexed="true" stored="true"/>
+    <field name="litDisplayRegion" type="string" indexed="true" stored="true"/>
+    <field name="litDisplayRegion_fr" type="string" indexed="true" stored="true"/>
+    <field name="litDisplayRegion_sp" type="string" indexed="true" stored="true"/>
 
     <field name="litLanguageOfTranslation" type="string" indexed="false" stored="true"/>
     <field name="litLanguageOfTranslation_fr" type="string" indexed="false" stored="true"/>
