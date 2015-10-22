@@ -102,7 +102,6 @@
     <field name="trAuthor" type="text" indexed="true" stored="true" multiValued="true"/>
     <field name="trAuthorWhole" type="string" indexed="true" stored="true" multiValued="true"/>
 
-
     <field name="trLinkToFullText" type="string" indexed="false" stored="true" multiValued="true"/>
     <field name="trLinkToFullTextSp" type="string" indexed="false" stored="true" multiValued="true"/>
     <field name="trLinkToFullTextFr" type="string" indexed="false" stored="true" multiValued="true"/>
@@ -174,45 +173,41 @@
     <field name="trIsProtocol" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="trLogoMedium" type="text" indexed="true" stored="true" multiValued="false"/>
 
-    <!-- InforMEA Decision -->
-    <field name="decId" type="int" indexed="true" stored="true" multiValued="false"/>
-    <field name="decOriginalId" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="decOrganizationId" type="int" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLink" type="string" indexed="true" stored="true" multiValued="true"/>
+    <!-- InforMEA COP Decision -->
+    <field name="decId" type="string" indexed="true" stored="true"/>
+    <field name="decLink" type="string" indexed="false" stored="true"/>
 
-    <field name="decShortTitle_en" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decShortTitle_es" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decShortTitle_fr" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decShortTitle_ar" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decShortTitle_ru" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decShortTitle_zh" type="text" indexed="true" stored="true" multiValued="false"/>
+    <field name="decShortTitle_en" type="string" indexed="true" stored="true"/>
+    <field name="decShortTitle_es" type="string" indexed="true" stored="true"/>
+    <field name="decShortTitle_fr" type="string" indexed="true" stored="true"/>
+    <field name="decShortTitle_ar" type="string" indexed="true" stored="true"/>
+    <field name="decShortTitle_ru" type="string" indexed="true" stored="true"/>
+    <field name="decShortTitle_zh" type="string" indexed="true" stored="true"/>
 
-    <field name="decLongTitle_en" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLongTitle_es" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLongTitle_fr" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLongTitle_ar" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLongTitle_ru" type="text" indexed="true" stored="true" multiValued="false"/>
-    <field name="decLongTitle_zh" type="text" indexed="true" stored="true" multiValued="false"/>
+    <field name="decLongTitle_en" type="string" indexed="true" stored="true"/>
+    <field name="decLongTitle_es" type="string" indexed="true" stored="true"/>
+    <field name="decLongTitle_fr" type="string" indexed="true" stored="true"/>
+    <field name="decLongTitle_ar" type="string" indexed="true" stored="true"/>
+    <field name="decLongTitle_ru" type="string" indexed="true" stored="true"/>
+    <field name="decLongTitle_zh" type="string" indexed="true" stored="true"/>
 
     <field name="decKeyword" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decSummary" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="decType" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decStatus" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decNumber" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decTreatyId" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decPublishDate" type="tdate" indexed="true" stored="true" multiValued="true"/>
-    <field name="decUpdateDate" type="tdate" indexed="true" stored="true" multiValued="true"/>
-    <field name="decMeetingId" type="int" indexed="true" stored="true" multiValued="true"/>
-    <field name="decMeetingTitle" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="decMeetingUrl" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="decSummary" type="string" indexed="true" stored="true"/>
     <field name="decBody" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="decDisplayOrder" type="int" indexed="true" stored="true" multiValued="true"/>
-    <field name="decRecCreated" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decRecAuthor" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="decRedUpdated" type="string" indexed="true" stored="true" multiValued="true"/>
-    <field name="decRecUpdatedAuthor" type="text" indexed="true" stored="true" multiValued="true"/>
-    <field name="decIsIndexed" type="boolean" indexed="true" stored="true" multiValued="true"/>
-    <field name="decDocUrls" type="text" indexed="true" stored="true" multiValued="true"/>
+
+    <field name="decType" type="string" indexed="true" stored="true"/>
+    <field name="decStatus" type="string" indexed="true" stored="true"/>
+    <field name="decNumber" type="string" indexed="false" stored="true"/>
+
+    <field name="decTreatyId" type="string" indexed="false" stored="true"/>
+    <field name="decTreaty" type="string" indexed="true" stored="true"/>
+
+    <field name="decPublishDate" type="tdate" indexed="false" stored="true"/>
+    <field name="decUpdateDate" type="tdate" indexed="false" stored="true"/>
+
+    <field name="decMeetingId" type="string" indexed="false" stored="true"/>
+    <field name="decMeetingTitle" type="string" indexed="false" stored="true"/>
+    <field name="decMeetingUrl" type="string" indexed="false" stored="true"/>
 
     <!-- Decision copyfields-->
     <field name="decTitleOfText" type="text" indexed="true" stored="true" multiValued="true"/>
