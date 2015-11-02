@@ -199,7 +199,7 @@
     <field name="decStatus" type="string" indexed="true" stored="true"/>
     <field name="decNumber" type="string" indexed="false" stored="true"/>
 
-    <field name="decTreatyId" type="string" indexed="false" stored="true"/>
+    <field name="decTreatyId" type="string" indexed="true" stored="true"/>
     <field name="decTreaty" type="string" indexed="true" stored="true"/>
 
     <field name="decPublishDate" type="tdate" indexed="false" stored="true"/>
