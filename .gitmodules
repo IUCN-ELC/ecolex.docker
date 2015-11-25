@@ -1,4 +1,4 @@
 [submodule "ecolex-prototype"]
 	path = ecolex-prototype
-	url = https://github.com/eaudeweb/ecolex-prototype.git
+	url = git@github.com:eaudeweb/ecolex-prototype.git
 	branch = master

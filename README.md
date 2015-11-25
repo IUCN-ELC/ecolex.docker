@@ -116,6 +116,26 @@ directory:
         sudo iptables -I INPUT -s 0.0.0.0/0 -d 0.0.0.0/0 -i docker0 -m addrtype --dst-type LOCAL -j ACCEPT
 
 
+Deployment
+----------
+
+1. Update project repository (on the machine where `web` component is running):
+
+    cd ecolex-prototype
+    git pull --rebase
+
+1. Update configuration files in ZooKeeper:
+
+    cp ecolex-prototype/configs/schema.xml solrconfigs/ecolex/conf/schema.xml
+    docker exec -it ecolexdocker_solr_1 bash
+    ./server/scripts/cloud-scripts/zkcli.sh -zkhost 10.0.0.87:2181 -cmd upconfig --confname ecolex --confdir /ecolex_configs/ecolex/conf/
+
+1. Reload schema:
+
+    curl "http://10.0.0.87:8983/solr/admin/collections?action=RELOAD&name=ecolex&indent=true"
+
+
+
 Development Setup
 -----------------
 
