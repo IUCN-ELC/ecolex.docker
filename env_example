@@ -1,0 +1,2 @@
+APP_PORT=[fill in Django app port here]
+SOLR_URI=[fill in Solr URI]

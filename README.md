@@ -128,12 +128,13 @@ Deployment
 
     cp ecolex-prototype/configs/schema.xml solrconfigs/ecolex/conf/schema.xml
     docker exec -it ecolexdocker_solr_1 bash
-    ./server/scripts/cloud-scripts/zkcli.sh -zkhost 10.0.0.87:2181 -cmd upconfig --confname ecolex --confdir /ecolex_configs/ecolex/conf/
+    ./server/scripts/cloud-scripts/zkcli.sh -zkhost [ZK_HOST]:[ZK_PORT] -cmd upconfig --confname ecolex --confdir /ecolex_configs/ecolex/conf/
 
 1. Reload schema:
 
-    curl "http://10.0.0.87:8983/solr/admin/collections?action=RELOAD&name=ecolex&indent=true"
+    curl "http://[SOLR_HOST]:[SOLR_PORT]/solr/admin/collections?action=RELOAD&name=ecolex&indent=true"
 
+_*Replace `[ZK_HOST]`, `[ZK_PORT]`, `[SOLR_HOST]`, `[SOLR_PORT]` with actual values._
 
 
 Development Setup
