@@ -1,17 +1,12 @@
-zk:
-   restart: always
-   image: jplock/zookeeper:3.4.6
-   ports:
-       - 2181:2181
-
 solr:
-    build: ./config/dev/solr
-    links:
-        - zk
+    image: solr
     ports:
         - 8983:8983
     command:
-        /opt/solr/bin/solr start -f -z zk:2181 -p 8983
+        /opt/solr/bin/solr start -f -p 8983
+    volumes:
+        - ./docker-volumes/solr:/opt/solr/server/solr
+        - ./solrconfigs:/ecolexconfigs
 
 web:
     build:
@@ -21,7 +16,7 @@ web:
     ports:
         - 8000:8000
     command:
-        bash -c "python /ecolex/manage.py runserver 0.0.0.0:8000"
+        bash -c "python /ecolex/manage.py migrate && python /ecolex/manage.py runserver 0.0.0.0:8000"
     links:
         - solr
     volumes:
