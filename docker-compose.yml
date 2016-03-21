@@ -5,7 +5,7 @@ solr:
     command:
         /opt/solr/bin/solr start -f -p 8983
     volumes:
-        - ./docker-volumes/solr:/opt/solr/server/solr
+        - ./docker-volumes/solr/solr:/opt/solr/server/solr
         - ./solrconfigs:/ecolexconfigs
 
 web:

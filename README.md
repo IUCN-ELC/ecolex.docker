@@ -60,7 +60,7 @@ directory:
 
 1. Create a directory on the host machine to store the `server/solr` directory:
 
-        mkdir docker-volumes/solr
+        mkdir -p docker-volumes/solr
 
 1. Make sure its host owner matches the container's solr user:
 
@@ -68,11 +68,15 @@ directory:
 
 1. Copy the `solr` directory from a temporary container to the volume:
 
-        docker run -it --rm -v /var/local/ecolex/ecolex.docker/docker-volumes/solr:/target solr cp -r server/solr/* /target/
+        docker run -it --rm -v /var/local/ecolex/ecolex.docker/docker-volumes/solr:/target solr cp -r server/solr/ /target/
 
 1. Run docker container:
 
         docker-compose up -d
+
+1. Create the solr core:
+
+        docker exec -it ecolexdocker_solr_1 bin/solr create -c ecolex -d /ecolexconfigs/ecolex/conf
 
 1. Make sure the public IP is visible from inside the docker container:
 
