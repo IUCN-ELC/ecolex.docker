@@ -94,8 +94,8 @@ Deployment
 
 1. Update project repository:
 
-    cd ecolex-prototype
-    git pull --rebase
+        cd ecolex-prototype
+        git pull --rebase
 
 
 Development Setup
@@ -135,5 +135,6 @@ Contacts
 
 People involved in this project:
 
-* Alex Eftimie (alex.eftimie at eaudeweb.ro)
 * Iulia Chiriac (iulia.chiriac at eaudeweb.ro)
+* Andrei Meliș (andrei.melis at eaudeweb.ro)
+* Taygun Agiali (taygun.agiali at eaudeweb.ro)
