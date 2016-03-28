@@ -7,6 +7,7 @@ solr:
     volumes:
         - ./docker-volumes/solr/solr:/opt/solr/server/solr
         - ./solrconfigs:/ecolexconfigs
+    restart: always
 
 web:
     build:
@@ -21,3 +22,4 @@ web:
         - solr
     volumes:
         - ./ecolex-prototype/:/ecolex
+    restart: always
