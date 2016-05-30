@@ -70,6 +70,11 @@ directory:
 
         docker run -it --rm -v /var/local/ecolex/ecolex.docker/docker-volumes/solr:/target solr cp -r server/solr/ /target/
 
+    or copy from host machine to solr container
+
+        sudo chown 999:999 solrconfigs/ecolex
+        docker cp solrconfigs/ecolex ecolexdocker_solr_1:/opt/solr/server/solr/ecolex/
+
 1. Run docker container:
 
         docker-compose up -d
