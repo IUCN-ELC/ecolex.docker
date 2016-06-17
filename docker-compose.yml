@@ -4,7 +4,7 @@ solr:
         - "127.0.0.1:8983:8983"
     command:
         bash -c "cp /opt/solr/bin/solr.in.sh /opt/solr/bin/solr.in.sh.orig &&
-                 sed -e 's/SOLR_HEAP=".*"/SOLR_HEAP="4096"/' </opt/solr/bin/solr.in.sh.orig >/opt/solr/bin/solr.in.sh &&
+                 sed -e 's/SOLR_HEAP=".*"/SOLR_HEAP="4096m"/' </opt/solr/bin/solr.in.sh.orig >/opt/solr/bin/solr.in.sh &&
                  cp /opt/solr/server/resources/log4j.properties /opt/solr/server/resources/log4j.properties.orig &&
                  sed -e 's/log4j.appender.file.MaxFileSize=".*"/log4j.appender.file.MaxFileSize="200MB"/' </opt/solr/server/resources/log4j.properties.orig >/opt/solr/server/resources/log4j.properties &&
                  /opt/solr/bin/solr start -f -p 8983"
