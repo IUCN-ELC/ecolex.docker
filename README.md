@@ -62,29 +62,28 @@ directory:
 
         mkdir -p docker-volumes/solr
 
-1. Make sure its host owner matches the container's solr user:
-
-        sudo chown 999:999 docker-volumes/solr
 
 1. Copy the `solr` directory from a temporary container to the volume:
 
-        docker run -it --rm -v /var/local/ecolex/ecolex.docker/docker-volumes/solr:/target solr cp -r server/solr/ /target/
+        docker run --user=root -it --rm -v /var/local/ecolex/ecolex.docker/docker-volumes/solr:/tmp/solr solr cp -r /opt/solr/server/solr/ /tmp/solr
 
-    or copy from host machine to solr container
+1. Copy the ecolex solr core into the shared volume from host:
 
-        sudo chown 999:999 solrconfigs/ecolex
-        docker cp solrconfigs/ecolex ecolexdocker_solr_1:/opt/solr/server/solr/ecolex/
+        cp -R solrconfigs/ecolex docker-volumes/solr/solr/
+
+1. Make sure its host owner matches the container's solr user:
+
+        sudo chown -R 999:999 docker-volumes/solr
 
 1. Run docker container:
 
         docker-compose up -d
 
-1. Create the solr core:
+1. Create the solr core (on development env):
 
         docker exec -it ecolexdocker_solr_1 bin/solr create -c ecolex -d /ecolexconfigs/ecolex/conf
 
 1. Make sure the public IP is visible from inside the docker container:
-
 
         docker exec -i -t ecolexdocker_solr1_1
         curl [public_ip]:8983
@@ -102,38 +101,6 @@ Deployment
         cd ecolex-prototype
         git pull --rebase
 
-
-Development Setup
------------------
-
-To setup a local development, one must follow the next steps:
-
-1. Copy docker-compose.yml from config/dev/
-
-        cp config/dev/docker-compose.yml .
-
-2. Download a Solr core and unzip it inside solrconfig/ecolex/data
-
-        cd config/dev/solr/ecolex
-        wget http://ecolex-frontend.edw.lan/data.tgz
-        tar xvf data.tgz
-
-3. Start the 3 instances (zk, solr, web):
-
-        docker-compose up
-
-4. Link solr with zk (Run this inside the running solr container):
-
-        docker exec -it ecolexdocker_solr_1 bash
-        cd server/
-        scripts/cloud-scripts/zkcli.sh -cmd upconfig -zkhost zk:2181 -d solr/ecolex/conf/ -n ecolex_conf
-        scripts/cloud-scripts/zkcli.sh -cmd linkconfig -zkhost zk:2181 -collection ecolex_collection -confname ecolex_conf -solrhome solr
-        scripts/cloud-scripts/zkcli.sh -cmd bootstrap -zkhost zk:2181 -solrhome solr
-
-5. Restart containers
-
-        docker-compose stop
-        docker-compose up
 
 Contacts
 ========
