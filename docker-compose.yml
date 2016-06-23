@@ -21,7 +21,9 @@ web:
     ports:
         - 8000:8000
     command:
-        bash -c "python /ecolex/manage.py migrate && python /ecolex/manage.py runserver 0.0.0.0:8000"
+        bash -c "python /ecolex/manage.py migrate &&
+                python /ecolex/manage.py loaddata /ecolex/ecolex/fixtures/initial_data.json &&
+                python /ecolex/manage.py runserver 0.0.0.0:8000"
     links:
         - solr
     volumes:
