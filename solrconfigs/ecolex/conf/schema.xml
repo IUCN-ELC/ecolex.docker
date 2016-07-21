@@ -510,6 +510,7 @@
     <field name="docCountry_en" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="docCountry_fr" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="docCountry_es" type="string" indexed="true" stored="true" multiValued="true"/>
+    <field name="docCountrySearch" type="text" indexed="true" stored="true" multiValued="true"/>
 
     <field name="docRegion_en" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="docRegion_fr" type="string" indexed="true" stored="true" multiValued="true"/>
@@ -663,7 +664,7 @@
     <field name="litNationalLegislationReference" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="litFaolexReference" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="litText" type="text" indexed="true" stored="true"/>
-
+    <field name="litExtraSearch" type="text" indexed="true" stored="true" multiValued="true"/>
     <uniqueKey>id</uniqueKey>
 
     <!-- Copy fields for boosting -->
@@ -774,5 +775,23 @@
     <copyField source="litAuthorM" dest="litAuthor"/>
     <copyField source="litCorpAuthorA" dest="litAuthor"/>
     <copyField source="litCorpAuthorM" dest="litAuthor"/>
+
+    <copyField source="litSerialTitle" dest="litExtraSearch"/>
+    <copyField source="litPublisher" dest="litExtraSearch"/>
+
+    <copyField source="partyCountry_en" dest="docCountrySearch"/>
+    <copyField source="cdCountry_en" dest="docCountrySearch"/>
+    <copyField source="litCountry_en" dest="docCountrySearch"/>
+    <copyField source="legCountry_en" dest="docCountrySearch"/>
+
+    <copyField source="partyCountry_fr" dest="docCountrySearch"/>
+    <copyField source="cdCountry_fr" dest="docCountrySearch"/>
+    <copyField source="litCountry_fr" dest="docCountrySearch"/>
+    <copyField source="legCountry_fr" dest="docCountrySearch"/>
+
+    <copyField source="partyCountry_es" dest="docCountrySearch"/>
+    <copyField source="cdCountry_es" dest="docCountrySearch"/>
+    <copyField source="litCountry_es" dest="docCountrySearch"/>
+    <copyField source="legCountry_es" dest="docCountrySearch"/>
 
 </schema>

@@ -845,6 +845,7 @@
       <int name="rows">10</int>
       <str name="df">text</str>
       <str name="defType">edismax</str>
+      <str name="q.op">AND</str>
       <str name="qf">
         <!-- General fields -->
         text^20
@@ -859,6 +860,9 @@
         legSubject_en^30 cdSubject_en^30 litSubject_en^30 decSubject_en^30 trSubject_en^30
         legSubject_fr^30 cdSubject_fr^30 litSubject_fr^30 decSubject_fr^30 trSubject_fr^30
         legSubject_es^30 cdSubject_es^30 litSubject_es^30 decSubject_es^30 trSubject_es^30
+
+        <!-- Country -->
+        docCountrySearch^30
 
         <!-- Treaty -->
         trTitleOfText_en^110 trTitleOfText_es^110
@@ -882,6 +886,9 @@
         litLongTitle_es^100 litLongTitle_other^100
         litPaperTitleOfText_en^100 litPaperTitleOfText_fr^100
         litPaperTitleOfText_es^100 litPaperTitleOfText_other^100
+        litAuthorM^90 litAuthorA^90
+        litCorpAuthorM^90 litCorpAuthorA^90
+        litExtraSearch^75
         litAbstract_en^50 litAbstract_fr^50 litAbstract_es^50 litAbstract_other^50
         litBasin_en^25 litBasin_fr^25 litBasin_es^25
         litRegion_en^25 litRegion_fr^25 litRegion_es^25
