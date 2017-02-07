@@ -1,0 +1,12 @@
+*~
+.*.sw[po]
+.idea/
+
+docker-compose.override.yml
+docker-compose.override.template
+deploy/secret.env
+
+current_tag
+old_tag
+old_old_tag
+lock_deploy

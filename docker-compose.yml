@@ -1,31 +1,52 @@
-solr:
-    image: solr:5.5
+version: "2"
+services:
+  web:
+    image: danbaragan/ecolex_web:$EDW_BUILD_VER
     ports:
-        - "127.0.0.1:8983:8983"
-    command:
-        bash -c "cp /opt/solr/bin/solr.in.sh /opt/solr/bin/solr.in.sh.orig &&
-                 sed -e 's/SOLR_HEAP=".*"/SOLR_HEAP="4096m"/' </opt/solr/bin/solr.in.sh.orig >/opt/solr/bin/solr.in.sh &&
-                 cp /opt/solr/server/resources/log4j.properties /opt/solr/server/resources/log4j.properties.orig &&
-                 sed -e 's/log4j.appender.file.MaxFileSize=".*"/log4j.appender.file.MaxFileSize="200MB"/' </opt/solr/server/resources/log4j.properties.orig >/opt/solr/server/resources/log4j.properties &&
-                 /opt/solr/bin/solr start -f -p 8983"
-    volumes:
-        - ./docker-volumes/solr/solr:/opt/solr/server/solr
-        - ./solrconfigs:/ecolexconfigs
-    restart: always
+      - 8000:8000
+    env_file:
+      - deploy/common.env
+      - deploy/web/docker.env
+      - deploy/secret.env
+    # adding environment: will override any of the above.
+    # letting VAR with no '=VAL' will use value from the env docker-compose is being run
+    depends_on:
+      - solr
+      - maria
 
-web:
-    build:
-        ./ecolex-prototype
-    environment:
-        - SOLR_URI=http://solr:8983/solr/ecolex
+
+#  web_updater:
+#    image: ecolexprototype_web
+#    command: bash
+#    volumes_from:
+#      - web
+#    depends_on:
+#      - web
+
+
+  maria:
+    image: mariadb:10.1
+    env_file:
+      - deploy/common.env
+      - deploy/secret.env
+
+
+  solr:
+    image: danbaragan/ecolex_solr:$EDW_BUILD_VER
     ports:
-        - 8000:8000
-    command:
-        bash -c "python /ecolex/manage.py migrate &&
-                python /ecolex/manage.py loaddata /ecolex/ecolex/fixtures/initial_data.json &&
-                python /ecolex/manage.py runserver 0.0.0.0:8000"
-    links:
-        - solr
+      - "8983:8983"
     volumes:
-        - ./ecolex-prototype/:/ecolex
-    restart: always
+      - ecolex_solr:/opt/solr/server/solr
+    env_file:
+      - deploy/common.env
+      - deploy/solr/docker.env
+      - deploy/secret.env
+
+
+
+volumes:
+  ecolex_solr:
+    driver: local
+  ecolex_db_maria:
+    driver: local
+
