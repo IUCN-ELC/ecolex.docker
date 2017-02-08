@@ -5,6 +5,8 @@
 docker-compose.override.yml
 docker-compose.override.template
 deploy/secret.env
+.env*
+!.env.sample
 
 current_tag
 old_tag
