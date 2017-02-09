@@ -13,9 +13,10 @@ echo Running docker-compose on remote from dir ${EDW_DEPLOY_DIR:NONE}
 ssh -q -t $EDW_DEPLOY_USER@$EDW_DEPLOY_HOST "cd $EDW_DEPLOY_DIR && \
 env \`xargs < .env\` docker-compose stop solr >/dev/null 2>&1 || true ;\
 docker stop solr_core_creator >/dev/null 2>&1 || true ;\
-env \`xargs < .env\` docker-compose run --name=solr_core_creator -d solr solr-create -c ecolex -d conf &&\
+env \`xargs < .env\` docker-compose run --name=solr_core_creator -d solr solr-create -c ecolex -d conf && \
 echo sleeping for 45 seconds to make sure the core gets created in the background ;\
 sleep 45 ;\
+docker logs solr_core_creator ;\
 docker stop solr_core_creator >/dev/null 2>&1 || true ;\
 docker rm solr_core_creator >/dev/null 2>&1 || true ;\
 "

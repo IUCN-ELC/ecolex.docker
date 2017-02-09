@@ -3,9 +3,12 @@ FROM solr:5.5
 USER root
 RUN apt-get update && apt-get -y install patch
 
+ARG EDW_solr_HEAP_MB=4096
+ARG EDW_solr_LOG_MB=200
+
 USER solr
-RUN sed -i -e's/^SOLR_HEAP=.*/SOLR_HEAP="4096m"/' /opt/solr/bin/solr.in.sh \
-    && sed -i -e's/^log4j.appender.file.MaxFileSize=.*/log4j.appender.file.MaxFileSize=200MB/' /opt/solr/server/resources/log4j.properties
+RUN sed -i -e"s/^SOLR_HEAP=.*\$/SOLR_HEAP=\"${EDW_solr_HEAP_MB}m\"/" /opt/solr/bin/solr.in.sh \
+    && sed -i -e"s/^log4j.appender.file.MaxFileSize=.*/log4j.appender.file.MaxFileSize=${EDW_solr_LOG_MB}MB/" /opt/solr/server/resources/log4j.properties
 
 RUN cp -r ./server/solr/configsets/data_driven_schema_configs/conf conf
 ADD ./build/solr/schema.xml \

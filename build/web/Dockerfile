@@ -1,7 +1,21 @@
-FROM python:3.4
+FROM python:3.4-slim
 RUN apt-get -y update &&\
-    apt-get -y --no-install-recommends install vim sudo
+    apt-get -y --no-install-recommends install \
+    vim \
+    sudo \
+    netcat-traditional \
+    git \
+    libmariadb-client-lgpl-dev \
+    gcc \
+    libc-dev-bin \
+    libc6-dev \
+    libstdc++-4.9-dev \
+    make \
+    patch \
+    ;
+
 #RUN rm -rf /var/lib/apt/lists/*
+RUN ln -s /usr/bin/mariadb_config /usr/bin/mysql_config
 
 RUN adduser --disabled-password --gecos '' --shell /bin/false web &&\
     adduser web sudo &&\

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-_init() {
+init() {
     ./manage.py migrate
     ./manage.py collectstatic --noinput
 }
 
-_init_bare() {
-    _init
+init_bare() {
+    init
     ./manage.py loaddata ecolex/fixtures/initial_data.json
     if [ "$1" != "skip_solr" ]; then
         cp ecolex/local_settings.initial_example ecolex/local_settings.py
@@ -14,14 +14,26 @@ _init_bare() {
         rm ecolex/local_settings.py
     fi
 }
+
+wait_sql() {
+    while ! nc -z maria 3306; do
+        echo "Waiting for MySQL server maria:3306 ..."
+        sleep 1
+    done
+}
+
+
 if [ "$1" == "run" ]; then
-    _init
+    wait_sql
+    init
     exec uwsgi config_file
 elif [ "$1" == "debug" ]; then
+    wait_sql
     exec ./manage.py runserver 0.0.0.0:$EDW_WEB_PORT
 elif [ "$1" == "init" ]; then
     shift
-    _init_bare "$@"
+    wait_sql
+    init_bare "$@"
 else
     exec "$@"
 fi
