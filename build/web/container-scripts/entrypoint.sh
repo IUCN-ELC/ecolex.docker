@@ -8,7 +8,7 @@ init() {
 init_bare() {
     init
     ./manage.py loaddata ecolex/fixtures/initial_data.json
-    if [ "$1" != "skip_solr" ]; then
+    if [ "$1" = "solr" ]; then
         cp ecolex/local_settings.initial_example ecolex/local_settings.py
         import_updater.sh
         rm ecolex/local_settings.py

@@ -13,8 +13,8 @@ RUN apt-get -y update &&\
     make \
     patch \
     ;
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-#RUN rm -rf /var/lib/apt/lists/*
 RUN ln -s /usr/bin/mariadb_config /usr/bin/mysql_config
 
 RUN adduser --disabled-password --gecos '' --shell /bin/false web &&\

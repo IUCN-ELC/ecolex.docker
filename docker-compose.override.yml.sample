@@ -1,0 +1,15 @@
+# This file is meant to override docker-compose.yml and olso have environment variables substituted
+version: "2"
+services:
+  web:
+    image: danbaragan/ecolex_web:<the image tag here>
+    command: debug
+    tty: true
+    stdin_open: true
+    volumes:
+      - <the local ecolex source dir here>:/home/web/ecolex
+    environment:
+      - EDW_WEB_DEBUG=True
+
+  solr:
+    image: danbaragan/ecolex_solr:<the image tag here>

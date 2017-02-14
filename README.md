@@ -1,3 +1,22 @@
+# Quick setup
+
+This docker orchestration repo is meant to be used with edwd, see below.
+However, if you do not wish to go into that or you don't want a bash & co environment,
+you can use this repo without edwd.
+
+For quick development setup, you will need docker (for Windows and Mac make sure you share the drive the sources are on with docker VM)
+
+* Make sure deploy/secret.env exists and has sane values (see deploy/secret.env.sample)
+* Make sure docker-compose.override.yml exists and has sane values (see sample companion)
+* run `docker-compose run --rm solr solr-create -c ecolex -d conf` then exit
+* run `docker-compose run --rm web init`
+* run `docker-compose up -d`
+
+You should be able to connect to http://localhost:8000
+
+To connect to other solr than the one bootstrapped by this docker suite change `EDW_SOLR_URI` in `deploy/web/docker.env`
+
+
 # Deploy architecture
 
 This deployment structure is based on bash scripts and ssh
