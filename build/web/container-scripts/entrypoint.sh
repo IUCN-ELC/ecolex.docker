@@ -22,18 +22,26 @@ wait_sql() {
     done
 }
 
+install_crontab() {
+    # through this method we can keep any kind of env var in crontab and it will work
+    # we exclude some for the horror they are
+    env | grep -v 'LS_COLORS\|no_proxy' > $ECOLEX_HOME/ecolex_crontab_with_env
+    cat $ECOLEX_HOME/ecolex.crontab >> $ECOLEX_HOME/ecolex_crontab_with_env
+    crontab -u $USER $ECOLEX_HOME/ecolex_crontab_with_env
+}
 
 if [ "$1" == "run" ]; then
     wait_sql
+    install_crontab
     init
-    exec uwsgi config_file
+    exec ./manage.py runserver 0.0.0.0:$EDW_WEB_PORT
 elif [ "$1" == "debug" ]; then
     wait_sql
     exec ./manage.py runserver 0.0.0.0:$EDW_WEB_PORT
 elif [ "$1" == "init" ]; then
     shift
     wait_sql
-    init_bare "$@"
+    init_bare $@
 else
-    exec "$@"
+    exec $@
 fi

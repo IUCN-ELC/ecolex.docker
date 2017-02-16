@@ -12,8 +12,22 @@ RUN apt-get -y update &&\
     libstdc++-4.9-dev \
     make \
     patch \
+    cron \
+    curl \
     ;
 #RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV GNUPGHOME=/tmp/gnupghome \
+    GOSU_VERSION=1.10
+
+RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" && \
+    curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" && \
+    mkdir $GNUPGHOME && \
+    chmod og-rwx $GNUPGHOME && \
+    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && \
+    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu && \
+    rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc && \
+    chmod +x /usr/local/bin/gosu && \
+    gosu nobody true
 
 RUN ln -s /usr/bin/mariadb_config /usr/bin/mysql_config
 
@@ -21,17 +35,26 @@ RUN adduser --disabled-password --gecos '' --shell /bin/false web &&\
     adduser web sudo &&\
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-ENV THIS_HOME=/home/web \
+# need to consume this anyway
+ARG EDW_web_SRC
+ENV ECOLEX_HOME=/home/web \
     PATH=/home/web/bin:$PATH \
-    EDW_WEB_PORT=8000
+    EDW_WEB_PORT=8000 \
+    EDW_web_SRC=$EDW_web_SRC \
+    USER=web
 
-RUN mkdir -p $THIS_HOME/ecolex &&\
-    mkdir -p $THIS_HOME/bin
+RUN mkdir -p $ECOLEX_HOME/ecolex &&\
+    mkdir -p $ECOLEX_HOME/bin
 
 # Add as few files of possible, we want to cache pip install step for good
 ADD build/web/container-scripts/entrypoint.sh \
+    build/web/container-scripts/root-entrypoint.sh \
     build/web/container-scripts/import_updater.sh \
-    $THIS_HOME/bin/
+    build/web/container-scripts/tst.sh \
+    $ECOLEX_HOME/bin/
+
+ADD build/web/ecolex.crontab \
+    $ECOLEX_HOME/
 
 ARG EDW_SRC_DIR
 # Every time you change the value of this variable the cache will be skipped from the next RUN step further
@@ -39,16 +62,16 @@ ARG EDW_SRC_DIR
 #RUN echo $EDW_ECOLEX_VER
 ADD ./${EDW_SRC_DIR}/requirements.txt \
     ./${EDW_SRC_DIR}/requirements-dep.txt \
-    $THIS_HOME/ecolex/
+    $ECOLEX_HOME/ecolex/
 
-WORKDIR $THIS_HOME/ecolex
+WORKDIR $ECOLEX_HOME/ecolex
 RUN pip install -r requirements-dep.txt
 
-ADD ./$EDW_SRC_DIR $THIS_HOME/ecolex/
-RUN chown -R web:web $THIS_HOME
+ADD ./$EDW_SRC_DIR $ECOLEX_HOME/ecolex/
+RUN chown -R web:web $ECOLEX_HOME
 
 EXPOSE $EDW_WEB_PORT
 
-USER web
-ENTRYPOINT ["entrypoint.sh"]
+# USER web # use gosu in the entrypoint
+ENTRYPOINT ["root-entrypoint.sh"]
 CMD ["run"]
