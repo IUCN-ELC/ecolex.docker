@@ -1,5 +1,7 @@
 FROM solr:5.5
 
+LABEL maintainer="daniel.baragan@eaudeweb.ro"
+
 USER root
 RUN apt-get update && apt-get -y install patch
 

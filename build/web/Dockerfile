@@ -1,4 +1,11 @@
 FROM python:3.4-slim
+
+# roles:
+#   front - publishes ports to the world; this depends on run/docker-compose though...
+#   cron - runs cron daemon
+LABEL maintainer="daniel.baragan@eaudeweb.ro" \
+      roles="front,cron"
+
 RUN apt-get -y update &&\
     apt-get -y --no-install-recommends install \
     vim \
@@ -50,7 +57,7 @@ RUN mkdir -p $ECOLEX_HOME/ecolex &&\
 ADD build/web/container-scripts/entrypoint.sh \
     build/web/container-scripts/root-entrypoint.sh \
     build/web/container-scripts/import_updater.sh \
-    build/web/container-scripts/tst.sh \
+    build/web/container-scripts/reprocess_from_db.sh \
     $ECOLEX_HOME/bin/
 
 ADD build/web/ecolex.crontab \
