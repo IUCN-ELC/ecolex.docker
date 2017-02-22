@@ -6,7 +6,7 @@
 echo Connecting with user ${EDW_DEPLOY_USER:NONE} and host ${EDW_DEPLOY_HOST:NONE}
 echo Running docker-compose on remote from dir ${EDW_DEPLOY_DIR:NONE}
 echo Make sure you have one of MYSQL_ROOT_PASSWORD, MYSQL_ALLOW_EMPTY_PASSWORD and MYSQL_RANDOM_ROOT_PASSWORD env vars defined
-echo Make sure you have ecolex DATABASE vars defined, especially, for docker-compose runs, EDW_MYSQL_DATABASE, EDW_MYSQL_USER and EDW_MYSQL_PASSWORD
+echo Make sure you have ecolex DATABASE vars defined MYSQL_DATABASE, MYSQL_USER and MYSQL_PASSWORD
 
 ssh -q -t $EDW_DEPLOY_USER@$EDW_DEPLOY_HOST "cd $EDW_DEPLOY_DIR || exit 1 ; \
 env \`xargs < .env\` docker-compose stop >/dev/null 2>&1 || true ;\

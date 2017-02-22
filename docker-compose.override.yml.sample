@@ -2,14 +2,26 @@
 version: "2"
 services:
   web:
-    image: danbaragan/ecolex_web:<the image tag here>
+    image: danbaragan/ecolex_web:<$EDW_BUILD_VER or the image tag here>
     command: debug
     tty: true
     stdin_open: true
     volumes:
       - <the local ecolex source dir here>:/home/web/ecolex
     environment:
-      - EDW_WEB_DEBUG=True
+      - EDW_RUN_WEB_DEBUG=True
+      - EDW_RUN_WEB_STATIC_ROOT=static
+    restart: "no"
+
+  staticdata:
+    command: ["true"]
 
   solr:
-    image: danbaragan/ecolex_solr:<the image tag here>
+    image: danbaragan/ecolex_solr:<$EDW_BUILD_VER or the image tag here>
+    environment:
+      - EDW_RUN_SOLR_HEAP_MB=200
+      - EDW_RUN_SOLR_LOG_MB=10
+    restart: "no"
+
+  maria:
+    restart: "no"

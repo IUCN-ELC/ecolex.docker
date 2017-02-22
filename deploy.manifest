@@ -3,3 +3,4 @@ deploy/common.env
 deploy/web/docker.env
 deploy/solr/docker.env
 deploy/secret.env
+www_static/

@@ -3,17 +3,27 @@ services:
   web:
     image: ${EDW_BUILD_DOCKERHUB}/ecolex_web:$EDW_BUILD_VER
     ports:
-      - 8000:8000
+      - "127.0.0.1:8000:8000"
     env_file:
       - deploy/common.env
       - deploy/web/docker.env
       - deploy/secret.env
     # adding environment: will override any of the above.
     # letting VAR with no '=VAL' will use value from the env docker-compose is being run
+    volumes_from:
+      - staticdata
     depends_on:
+      - staticdata
       - solr
       - maria
+    restart: "always"
 
+  staticdata:
+    image: alpine:latest
+    volumes:
+      - ./www_static:/www_static
+    # we know user web from service web has ids 1000:1000; we control its Dockerfile
+    command: ["chown", "-R", "1000:1000", "/www_static"]
 
   maria:
     image: mariadb:10.1
@@ -23,19 +33,20 @@ services:
     env_file:
       - deploy/common.env
       - deploy/secret.env
+    restart: "always"
 
 
   solr:
     image: ${EDW_BUILD_DOCKERHUB}/ecolex_solr:$EDW_BUILD_VER
     ports:
-      - "8983:8983"
+      - "127.0.0.1:8983:8983"
     volumes:
       - ecolex_solr:/opt/solr/server/solr
     env_file:
       - deploy/common.env
       - deploy/solr/docker.env
       - deploy/secret.env
-
+    restart: "always"
 
 
 volumes:

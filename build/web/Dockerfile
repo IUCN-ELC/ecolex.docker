@@ -21,8 +21,8 @@ RUN apt-get -y update &&\
     patch \
     cron \
     curl \
-    ;
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 ENV GNUPGHOME=/tmp/gnupghome \
     GOSU_VERSION=1.10
 
@@ -43,14 +43,15 @@ RUN adduser --disabled-password --gecos '' --shell /bin/false web &&\
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # need to consume this anyway
-ARG EDW_web_SRC
+ARG EDW_BUILD_web_SRC
 ENV ECOLEX_HOME=/home/web \
     PATH=/home/web/bin:$PATH \
-    EDW_WEB_PORT=8000 \
-    EDW_web_SRC=$EDW_web_SRC \
+    EDW_RUN_WEB_PORT=8000 \
+    EDW_BUILD_web_SRC=$EDW_BUILD_web_SRC \
     USER=web
 
 RUN mkdir -p $ECOLEX_HOME/ecolex &&\
+    mkdir -p $ECOLEX_HOME/www_static &&\
     mkdir -p $ECOLEX_HOME/bin
 
 # Add as few files of possible, we want to cache pip install step for good
@@ -63,21 +64,24 @@ ADD build/web/container-scripts/entrypoint.sh \
 ADD build/web/ecolex.crontab \
     $ECOLEX_HOME/
 
-ARG EDW_SRC_DIR
+ARG EDW_BUILD_SRC_DIR
 # Every time you change the value of this variable the cache will be skipped from the next RUN step further
 #ARG EDW_ECOLEX_VER
 #RUN echo $EDW_ECOLEX_VER
-ADD ./${EDW_SRC_DIR}/requirements.txt \
-    ./${EDW_SRC_DIR}/requirements-dep.txt \
+ADD ./${EDW_BUILD_SRC_DIR}/requirements.txt \
+    ./${EDW_BUILD_SRC_DIR}/requirements-dep.txt \
     $ECOLEX_HOME/ecolex/
 
 WORKDIR $ECOLEX_HOME/ecolex
 RUN pip install -r requirements-dep.txt
 
-ADD ./$EDW_SRC_DIR $ECOLEX_HOME/ecolex/
+ADD ./$EDW_BUILD_SRC_DIR $ECOLEX_HOME/ecolex/
 RUN chown -R web:web $ECOLEX_HOME
 
-EXPOSE $EDW_WEB_PORT
+# no changes to volume are persistent after declaring it
+VOLUME ["/home/web/www_static"]
+
+EXPOSE $EDW_RUN_WEB_PORT
 
 # USER web # use gosu in the entrypoint
 ENTRYPOINT ["root-entrypoint.sh"]

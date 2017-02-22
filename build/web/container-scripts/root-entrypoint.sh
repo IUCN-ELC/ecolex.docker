@@ -5,4 +5,4 @@
 # Start cron in background
 /usr/sbin/cron
 
-exec gosu $USER:$USER entrypoint.sh $@
+exec gosu $USER:$USER entrypoint.sh "$@"

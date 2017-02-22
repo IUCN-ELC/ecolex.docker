@@ -14,7 +14,7 @@ For quick development setup, you will need docker (for Windows and Mac make sure
 
 You should be able to connect to http://localhost:8000
 
-To connect to other solr than the one bootstrapped by this docker suite change `EDW_SOLR_URI` in `deploy/web/docker.env`
+To connect to other solr than the one bootstrapped by this docker suite change `EDW_RUN_SOLR_URI` in `deploy/web/docker.env`
 
 
 # Deploy architecture
@@ -28,7 +28,7 @@ environment is set at each invocation and expires afterwards.
 This repo contains build/deploy instructions specific to ecolex project
 The edwd command will use this repo and any other source repos to perfom builds.
 `build/<proj_name>/src.url` contains the url to such source repos
-Environment var `EDW_<proj_name>_SRC` can overwrite the src repo url with a local srource dir.
+Environment var `EDW_BUILD_<proj_name>_SRC` can overwrite the src repo url with a local srource dir.
 Use it to determine build to use local dirs for specific projescts rather than git repos. For development purposes.
 
 There are three entities at play here:

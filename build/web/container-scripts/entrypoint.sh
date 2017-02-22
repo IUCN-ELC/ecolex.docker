@@ -34,14 +34,14 @@ if [ "$1" == "run" ]; then
     wait_sql
     install_crontab
     init
-    exec gunicorn -w1 --bind=0.0.0.0:$EDW_WEB_PORT ecolex.wsgi:application
+    exec gunicorn -w1 --bind=0.0.0.0:$EDW_RUN_WEB_PORT ecolex.wsgi:application
 elif [ "$1" == "debug" ]; then
     wait_sql
-    exec ./manage.py runserver 0.0.0.0:$EDW_WEB_PORT
+    exec ./manage.py runserver 0.0.0.0:$EDW_RUN_WEB_PORT
 elif [ "$1" == "init" ]; then
     shift
     wait_sql
-    init_bare $@
+    init_bare "$@"
 else
-    exec $@
+    exec "$@"
 fi
