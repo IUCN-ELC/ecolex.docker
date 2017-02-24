@@ -1,6 +1,7 @@
 FROM solr:5.5
 
-LABEL maintainer="daniel.baragan@eaudeweb.ro"
+LABEL maintainer="daniel.baragan@eaudeweb.ro" \
+      name="solr"
 
 USER root
 RUN apt-get update && apt-get -y --no-install-recommends install \

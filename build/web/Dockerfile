@@ -1,10 +1,11 @@
-FROM python:3.4-slim
+FROM python:3.6-slim
 
 # roles:
 #   front - publishes ports to the world; this depends on run/docker-compose though...
 #   cron - runs cron daemon
 LABEL maintainer="daniel.baragan@eaudeweb.ro" \
-      roles="front,cron"
+      roles="front,cron" \
+      name="web"
 
 RUN apt-get -y update &&\
     apt-get -y --no-install-recommends install \
@@ -16,7 +17,6 @@ RUN apt-get -y update &&\
     gcc \
     libc-dev-bin \
     libc6-dev \
-    libstdc++-4.9-dev \
     make \
     patch \
     cron \

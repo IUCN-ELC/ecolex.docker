@@ -203,6 +203,12 @@ Current edwd interactions from Own machine are:
 - `edwd stop`
 - `edwd lockdown some reason`  Doing so will place a lock on the Host machine so that future `edwd deploy`
 will be refused with that reason. `edwd deploy -f` ignores this behaviour and deletes the lock
+- `edwd debug [service]` start the suite in background and attach to the web container. Use ctrl+p followed by ctrl+q to dettach.
+Useful for running interactive debuggers in the code. Make sure the container is started with tty and stdin_open.
+- `edwd log [service]` attach in `tail -f` way to the given container, default web. ctrl+c is safe to use for ending
+the attachment to the stream of logs
+
+All commands can be run with `-h` flag for help
 
 You may also run any r-sacript from deploy/subproj/own-scripts dir. Make sure you have at least `EDW_DEPLOY_*` vars
 into its running environment, usually with ```env `xargs < .env` deploy/subproj/own-scripts/r-script.sh```
