@@ -4,6 +4,7 @@ LABEL maintainer="daniel.baragan@eaudeweb.ro"
 
 USER root
 RUN apt-get update && apt-get -y --no-install-recommends install \
+    vim \
     patch \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

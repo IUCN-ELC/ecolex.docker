@@ -4,6 +4,3 @@ Thus this destination should be used when copying these scripts
 one can run them, from a remote, client machine afterwards with
 ssh -q -t $EDW_DEPLOY_USER@$EDW_DEPLOY_HOST "cd $EDW_DEPLOY_DIR &&\
 docker-compose exec solr <name of the script originated from this dir>"
-
-Please see exemples of running these scripts remotely in client-side-scripts
-
