@@ -207,6 +207,13 @@ will be refused with that reason. `edwd deploy -f` ignores this behaviour and de
 Useful for running interactive debuggers in the code. Make sure the container is started with tty and stdin_open.
 - `edwd log [service]` attach in `tail -f` way to the given container, default web. ctrl+c is safe to use for ending
 the attachment to the stream of logs
+- `edwd run [-u user] [service [command]]` - run service (and all dependant services). Be interactive. Container will be
+removed on exit. Service ports will not be published
+This means that this can be run even if the suite is up including the service we run, practically twice.
+By default starts service `web` and command `bash` with the default user of the image. Note that the entrypoint
+might override the user you specify with `-u`
+- `edwd exec [-u user] [service [command]]` Execute a command (interactive) in the context of a running service.
+Service must have been started with `up`, not `run`.
 
 All commands can be run with `-h` flag for help
 

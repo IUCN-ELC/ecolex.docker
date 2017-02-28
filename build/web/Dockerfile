@@ -21,6 +21,7 @@ RUN apt-get -y update &&\
     patch \
     cron \
     curl \
+    libyajl2 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV GNUPGHOME=/tmp/gnupghome \
@@ -59,6 +60,7 @@ ADD build/web/container-scripts/entrypoint.sh \
     build/web/container-scripts/root-entrypoint.sh \
     build/web/container-scripts/import_updater.sh \
     build/web/container-scripts/reprocess_from_db.sh \
+    build/web/container-scripts/migrate_sqlite2maria.sh \
     $ECOLEX_HOME/bin/
 
 ADD build/web/ecolex.crontab \
