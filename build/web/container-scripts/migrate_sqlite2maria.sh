@@ -2,12 +2,14 @@
 
 set -e
 
+rm sqlite_dump_*.json || true
+
 cp ecolex/local_settings.sqlite.example ecolex/local_settings.py
 
 echo "Dumping sqlite db to database.json"
 echo "=================================="
 echo
-./manage.py dumpdata > database.json
+./manage.py dump_sqlite
 rm ecolex/local_settings.py
 
 
@@ -17,6 +19,6 @@ rm ecolex/local_settings.py
 echo "Reload data from database.json"
 echo "=============================="
 echo
-./manage.py iloaddata database.json
+ls -1 sqlite_dump_*.json |sort |xargs ./manage.py iloaddata
 
-rm database.json
+rm sqlite_dump_*.json

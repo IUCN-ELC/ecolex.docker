@@ -26,12 +26,12 @@ services:
     command: ["chown", "-R", "1000:1000", "/www_static"]
 
   maria:
-    image: mariadb:10.1
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    image: ${EDW_BUILD_DOCKERHUB}/ecolex_maria:$EDW_BUILD_VER
     volumes:
       - ecolex_db_maria:/var/lib/mysql
     env_file:
       - deploy/common.env
+      - deploy/maria/docker.env
       - deploy/secret.env
     restart: "always"
 
