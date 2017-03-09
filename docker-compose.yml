@@ -21,7 +21,7 @@ services:
   staticdata:
     image: alpine:latest
     volumes:
-      - ./www_static:/www_static
+      - /var/local/www_ecolex_static:/www_static
     # we know user web from service web has ids 1000:1000; we control its Dockerfile
     command: ["chown", "-R", "1000:1000", "/www_static"]
 

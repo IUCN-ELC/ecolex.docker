@@ -11,6 +11,12 @@ echo "=================================="
 echo
 ./manage.py dump_sqlite
 rm ecolex/local_settings.py
+# let autoincrement do its work on DocumentText
+mv sqlite_dump_00000.json sqlite_dump_00000.bak
+for f in sqlite_dump_*.json; do
+    sed  -i -e's/"pk": [0-9]\+/"pk": null/' $f
+done
+mv sqlite_dump_00000.bak sqlite_dump_00000.json
 
 
 ./manage.py migrate --run-syncdb
@@ -19,6 +25,9 @@ rm ecolex/local_settings.py
 echo "Reload data from database.json"
 echo "=============================="
 echo
-ls -1 sqlite_dump_*.json |sort |xargs ./manage.py iloaddata
+for f in `ls -1 sqlite_dump_*.json |sort`; do
+    echo loading $f
+    ./manage.py iloaddata $f
+done
 
 rm sqlite_dump_*.json

@@ -78,14 +78,34 @@ The Host machine should hold:
 
 ### Host machine requirements
 
-- sshd
 - docker daemon/client (>1.10), docker-compose (>1.6)
+- sshd
 - git
 - apache
 - iptables
 
 ### Host machine setup
 
+#### docker
+
+Install [docker-ce](https://store.docker.com/editions/community/docker-ce-server-centos)
+For [debian](https://docs.docker.com/engine/installation/linux/debian/)
+
+
+For docker-compose the easiest way is to install pip
+centos:
+```bash
+yum install -y epel-release
+yum update
+yum -y install python-pip
+pip install docker-compose
+```
+
+debian:
+```bash
+apt-get install python-pip python-dev build-essentials
+pip install docker-compose
+```
 #### sshd & deploy user
 
 Create the deploy user, I shall call it deploy from now on
@@ -100,22 +120,6 @@ Host machine. For RSA keys, copy `id_rsa.pub` from your user on the Own machine 
 Install openssh-server if missing and set AllowUsers to accept deploy if needed.
 
 
-#### docker
-
-wget a docker-engine deb file from https://apt.dockerproject.org/repo/pool/main/d/docker-engine/
-
-It has to be greater than 1.10.
-```bash
-apt-get install libapparmor1
-dpkg -i <docker.deb>
-```
-Or use any other method to setup docker
-
-For docker-compose the easyest way is to install pip
-```bash
-apt-get install python-pip python-dev build-essentials
-pip install docker-compose
-```
 
 #### git
 Get git

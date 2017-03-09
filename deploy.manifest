@@ -4,4 +4,4 @@ deploy/web/docker.env
 deploy/solr/docker.env
 deploy/maria/docker.env
 deploy/secret.env
-www_static/
+/var/local/www_ecolex_static/

@@ -10,8 +10,6 @@ docker-compose.override.template
 deploy/secret.env
 .env*
 !.env.sample
-www_static/*
-!www_static/stub
 
 current_tag
 old_tag

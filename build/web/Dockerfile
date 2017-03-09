@@ -52,7 +52,7 @@ ENV ECOLEX_HOME=/home/web \
     USER=web
 
 RUN mkdir -p $ECOLEX_HOME/ecolex &&\
-    mkdir -p $ECOLEX_HOME/www_static &&\
+    mkdir -p /www_static &&\
     mkdir -p $ECOLEX_HOME/bin
 
 # Add as few files of possible, we want to cache pip install step for good
@@ -81,7 +81,7 @@ ADD ./$EDW_BUILD_SRC_DIR $ECOLEX_HOME/ecolex/
 RUN chown -R web:web $ECOLEX_HOME
 
 # no changes to volume are persistent after declaring it
-VOLUME ["/home/web/www_static"]
+VOLUME ["/www_static"]
 
 EXPOSE $EDW_RUN_WEB_PORT
 
