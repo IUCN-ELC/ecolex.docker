@@ -1,0 +1,76 @@
+version: "2"
+services:
+  web:
+    image: iucn/ecolex_web:latest
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - web.env
+      - mysql.env
+    # adding environment: will override any of the above.
+    # letting VAR with no '=VAL' will use value from the env docker-compose is being run
+    volumes_from:
+      - webvolumefixer
+    depends_on:
+      - webvolumefixer
+      - solr
+      - maria
+    logging:
+      driver: journald
+    restart: "always"
+
+  webvolumefixer:
+    image: alpine:latest
+    volumes:
+      - ../www_ecolex_static:/www_static
+      - ../web_logs:/home/web/ecolex/logs
+    # we know user web from service web has ids 1000:1000; we control its Dockerfile
+    command: ["chown", "-R", "1000:1000", "/www_static", "/home/web/ecolex/logs"]
+    logging:
+      driver: journald
+
+  maria:
+    image: iucn/ecolex_maria:latest
+    volumes:
+      - ecolex_db_maria:/var/lib/mysql
+    env_file:
+      - mysql.env
+    logging:
+      driver: journald
+    restart: "always"
+
+
+  solr:
+    image: iucn/ecolex_solr:latest
+    ports:
+      - "127.0.0.1:8983:8983"
+    volumes_from:
+      - solrvolumefixer
+    environment:
+      - EDW_RUN_SOLR_HEAP_MB=4096
+      - EDW_RUN_SOLR_LOG_MB=200
+    depends_on:
+      - solrvolumefixer
+    logging:
+      driver: journald
+    restart: "always"
+
+  solrvolumefixer:
+    # we need solr image so that the volume fixer will populate the new named volume with files from the image
+    image: iucn/ecolex_solr:latest
+    user: root
+    volumes:
+      - ecolex_solr:/opt/solr/server/solr
+      - ./schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
+    entrypoint: ["chown"]
+    command: ["-R", "8983:8983", "/opt/solr/server/solr/ecolex/conf/schema.xml"]
+    logging:
+      driver: journald
+
+
+volumes:
+  ecolex_solr:
+    driver: local
+  ecolex_db_maria:
+    driver: local
+
