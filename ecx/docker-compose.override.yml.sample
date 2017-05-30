@@ -6,8 +6,10 @@ services:
     image: iucn/ecolex_web:latest
     ports:
       - "127.0.0.1:8000:8000"
-    # Uncomment command below and edit web.dev.env to run with DEBUG=false
-    command: debug
+    # Comment both commands below and edit web.dev.env to run with DEBUG=false
+    # command: debug
+    # Use the next command only once ( it makes migrations and installs some fixtures)
+    command: init_dev
     tty: true
     stdin_open: true
     volumes:
