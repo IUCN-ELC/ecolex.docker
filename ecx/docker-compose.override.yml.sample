@@ -4,12 +4,15 @@ version: "2"
 services:
   web:
     image: iucn/ecolex_web:latest
+    ports:
+      - "127.0.0.1:8000:8000"
+    # Uncomment command below and edit web.dev.env to run with DEBUG=false
     command: debug
     tty: true
     stdin_open: true
     volumes:
-      - <the local ecolex source dir here>:/home/web/ecolex
-    # Use env vars instead of hardcoded values if possible; - VAR=${VAR}
+      # path to root dir of ecolex source code
+      - ../../ecolex:/home/web/ecolex
     env_file:
       - web.dev.env
       - mysql.dev.env
@@ -26,10 +29,9 @@ services:
 
   solr:
     image: iucn/ecolex_solr:latest
-    # Use env vars instead of hardcoded values if possible; - VAR=${VAR}
-  environment:    
-    EDW_RUN_SOLR_HEAP_MB=200
-    EDW_RUN_SOLR_LOG_MB=10
+    environment:
+      - EDW_RUN_SOLR_HEAP_MB=200
+      - EDW_RUN_SOLR_LOG_MB=10
     logging:
       driver: json-file
     restart: "no"
