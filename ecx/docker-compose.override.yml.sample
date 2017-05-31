@@ -39,6 +39,12 @@ services:
     restart: "no"
 
   solrvolumefixer:
+#  Shadowing schema.xml from ecolex source code might work for some:
+#    volumes:
+#      - ../../ecolex/docker/solr/schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
+#  If not, just run:
+#    docker cp ../../ecolex/docker/solr/schema.xml ecx_solr:/opt/solr/server/solr/ecolex/conf
+#    curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=ecolex"
     logging:
       driver: json-file
 

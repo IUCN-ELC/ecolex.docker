@@ -71,7 +71,6 @@ services:
     user: root
     volumes:
       - ecolex_solr:/opt/solr/server/solr
-    # - ../../ecolex/docker/solr/schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
     entrypoint: ["chown"]
     command: ["-R", "8983:8983", "/opt/solr/server/solr/ecolex/conf/schema.xml"]
     logging:
