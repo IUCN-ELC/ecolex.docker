@@ -2,6 +2,7 @@ version: "2"
 services:
   web:
     image: iucn/ecolex_web:latest
+    container_name: ecx_web
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -23,6 +24,7 @@ services:
 
   webvolumefixer:
     image: alpine:latest
+    container_name: ecx_webvolumefixer
     volumes:
       - ../www_ecolex_static:/www_static
       - ../web_logs:/home/web/ecolex/logs
@@ -33,6 +35,7 @@ services:
 
   maria:
     image: iucn/ecolex_maria:latest
+    container_name: ecx_maria
     environment:
       TZ: Europe/Copenhagen
     volumes:
@@ -46,6 +49,7 @@ services:
 
   solr:
     image: iucn/ecolex_solr:latest
+    container_name: ecx_solr
     ports:
       - "127.0.0.1:8983:8983"
     volumes_from:
@@ -63,10 +67,11 @@ services:
   solrvolumefixer:
     # we need solr image so that the volume fixer will populate the new named volume with files from the image
     image: iucn/ecolex_solr:latest
+    container_name: ecx_solrvolumefixer
     user: root
     volumes:
       - ecolex_solr:/opt/solr/server/solr
-      #- ./schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
+    # - ../../ecolex/docker/solr/schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
     entrypoint: ["chown"]
     command: ["-R", "8983:8983", "/opt/solr/server/solr/ecolex/conf/schema.xml"]
     logging:
