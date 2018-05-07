@@ -7,9 +7,9 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     # Comment both commands below and edit web.dev.env to run with DEBUG=false
-    # command: debug
-    # Use the next command only once ( it makes migrations and installs some fixtures)
-    command: init_dev
+    command: debug
+    # Use the command below only once ( it makes migrations and installs some fixtures)
+    # command: init_dev
     tty: true
     stdin_open: true
     volumes:
@@ -55,3 +55,26 @@ services:
     logging:
       driver: json-file
     restart: "no"
+
+  apache:
+    image: eeacms/apache:2.4-2.2
+    ports:
+      - "127.0.0.1:80:80"
+    volumes:
+      - ./www_ecolex_static:/var/local/ecolex/www_ecolex_static:ro
+    environment:
+       APACHE_CONFIG: |-
+         <VirtualHost *:80>
+            ServerName ecolex.local
+
+            Alias /static /var/local/ecolex/www_ecolex_static
+            <Directory /var/local/ecolex/www_ecolex_static>
+              Require all granted
+            </Directory>
+
+            ProxyPass /static !
+            ProxyPreserveHost On
+            ProxyPass / http://web:8000/ timeout=300 retry=0
+            ProxyPassReverse / http://web:8000/
+
+         </VirtualHost>
