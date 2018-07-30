@@ -34,48 +34,45 @@ services:
       driver: journald
 
   maria:
-    image: iucn/ecolex_maria:latest
+    image: mariadb:10
     container_name: ecx_maria
     environment:
-      TZ: Europe/Copenhagen
+      TZ: ${TZ}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER} 
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - ecolex_db_maria:/var/lib/mysql
-    env_file:
-      - mysql.env
     logging:
       driver: journald
     restart: "always"
-
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--query-cache-size=${EDW_RUN_MARIA_query_cache_size}", "--max-allowed-packet=${EDW_RUN_MARIA_query_cache_size}",
+              "--max-connections=${EDW_RUN_MARIA_max_connections}", "--max-heap-table-size=${EDW_RUN_MARIA_max_heap_table_size}", "--tmp_table_size=${EDW_RUN_MARIA_tmp_table_size}",
+              "--query_cache_limit=${EDW_RUN_MARIA_query_cache_limit}", "--innodb-buffer-pool-size=${EDW_RUN_MARIA_innodb_buffer_pool_size}", "--slow-query-log=${EDW_RUN_MARIA_slow_query_log}" ,
+              "--innodb-log-file-size=300M"  ]
 
   solr:
-    image: iucn/ecolex_solr:latest
+    image: solr:5.5 
     container_name: ecx_solr
     ports:
-      - "127.0.0.1:8983:8983"
-    volumes_from:
-      - solrvolumefixer
+      - "8983:8983"
     environment:
-      - TZ=Europe/Copenhagen
-      - EDW_RUN_SOLR_HEAP_MB=4096
-      - EDW_RUN_SOLR_LOG_MB=200
-    depends_on:
-      - solrvolumefixer
+      TZ: ${TZ}
+      EDW_RUN_SOLR_HEAP_MB: ${EDW_RUN_SOLR_HEAP_MB}
+      EDW_RUN_SOLR_LOG_MB: ${EDW_RUN_SOLR_LOG_MB}
+    volumes:
+      - ./solr/solr_scripts/:/docker-entrypoint-initdb.d/
+      - ecolex_solr:/opt/solr/server/solr/mycores
+      - ./solr/ecolex_initial_conf:/core-template/ecolex_initial_conf:ro
     logging:
       driver: journald
     restart: "always"
-
-  solrvolumefixer:
-    # we need solr image so that the volume fixer will populate the new named volume with files from the image
-    image: iucn/ecolex_solr:latest
-    container_name: ecx_solrvolumefixer
-    user: root
-    volumes:
-      - ecolex_solr:/opt/solr/server/solr
-    entrypoint: ["chown"]
-    command: ["-R", "8983:8983", "/opt/solr/server/solr/ecolex/conf/schema.xml"]
-    logging:
-      driver: journald
-
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - ecolex 
+      - /core-template/ecolex_initial_conf
 
 volumes:
   ecolex_solr:
