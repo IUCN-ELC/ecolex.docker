@@ -1,39 +1,39 @@
 version: "2"
 services:
-  web:
-    image: iucn/ecolex_web:latest
+  app:
+    image: iucn/ecolex_web:docker_major_refactoring 
     container_name: ecx_web
     ports:
       - "127.0.0.1:8000:8000"
     environment:
-      TZ: Europe/Copenhagen
-    env_file:
-      - web.env
-      - mysql.env
-    # adding environment: will override any of the above.
-    # letting VAR with no '=VAL' will use value from the env docker-compose is being run
-    volumes_from:
-      - webvolumefixer
+      TZ: ${TZ}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      EDW_RUN_SOLR_URI: ${EDW_RUN_SOLR_URI}
+      EDW_RUN_WEB_ECOLEX_CODE: ${EDW_RUN_WEB_ECOLEX_CODE}
+      EDW_RUN_WEB_FAOLEX_API_KEY: ${EDW_RUN_WEB_FAOLEX_API_KEY}
+      EDW_RUN_WEB_FAOLEX_CODE: ${EDW_RUN_WEB_FAOLEX_CODE}
+      EDW_RUN_WEB_FAOLEX_CODE_2: ${EDW_RUN_WEB_FAOLEX_CODE_2}
+      EDW_RUN_WEB_FAOLEX_ENABLED: ${EDW_RUN_WEB_FAOLEX_ENABLED}
+      EDW_RUN_WEB_INFORMEA_CODE: ${EDW_RUN_WEB_INFORMEA_CODE}
+      EDW_RUN_WEB_PORT: ${EDW_RUN_WEB_PORT}
+      EDW_RUN_WEB_SECRET_KEY: ${EDW_RUN_WEB_SECRET_KEY}
+      EDW_RUN_WEB_SENTRY_DSN: ${EDW_RUN_WEB_SENTRY_DSN}
+      EDW_RUN_WEB_SENTRY_PUBLIC_DSN: ${EDW_RUN_WEB_SENTRY_PUBLIC_DSN}
+      EDW_RUN_WEB_STATIC_ROOT: ${EDW_RUN_WEB_STATIC_ROOT}
     depends_on:
-      - webvolumefixer
       - solr
       - maria
+    volumes:
+      - ../www_ecolex_static:/www_static
+      - ../web_logs:/home/web/ecolex/logs
     logging:
       driver: journald
     restart: "always"
 
-  webvolumefixer:
-    image: alpine:latest
-    container_name: ecx_webvolumefixer
-    volumes:
-      - ../www_ecolex_static:/www_static
-      - ../web_logs:/home/web/ecolex/logs
-    # we know user web from service web has ids 1000:1000; we control its Dockerfile
-    command: ["chown", "-R", "1000:1000", "/www_static", "/home/web/ecolex/logs"]
-    logging:
-      driver: journald
 
-  maria:
+  db:
     image: mariadb:10
     container_name: ecx_maria
     environment:

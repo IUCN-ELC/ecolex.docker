@@ -2,7 +2,7 @@
 # on the other hand environment variables overrides this file.
 version: "2"
 services:
-  web:
+  app:
     image: iucn/ecolex_web:latest
     ports:
       - "127.0.0.1:8000:8000"
@@ -15,48 +15,22 @@ services:
     volumes:
       # path to root dir of ecolex source code
       - ../../ecolex:/home/web/ecolex
-    env_file:
-      - web.dev.env
-      - mysql.dev.env
     logging:
       driver: json-file
     restart: "no"
-
-  webvolumefixer:
-    volumes:
-      - ./www_ecolex_static:/www_static
-      - ./web_logs:/home/web/ecolex/logs
-    logging:
-      driver: json-file
 
   solr:
-    image: iucn/ecolex_solr:latest
-    environment:
-      - EDW_RUN_SOLR_HEAP_MB=200
-      - EDW_RUN_SOLR_LOG_MB=10
     logging:
       driver: json-file
     restart: "no"
 
-  solrvolumefixer:
-#  Shadowing schema.xml from ecolex source code might work for some:
-#    volumes:
-#      - ../../ecolex/docker/solr/schema.xml:/opt/solr/server/solr/ecolex/conf/schema.xml
-#  If not, just run:
-#    docker cp ../../ecolex/docker/solr/schema.xml ecx_solr:/opt/solr/server/solr/ecolex/conf
-#    curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=ecolex"
-    logging:
-      driver: json-file
 
-  maria:
-    image: iucn/ecolex_maria:latest
-    env_file:
-      - mysql.dev.env
+  db:
     logging:
       driver: json-file
     restart: "no"
 
-  apache:
+  static:
     image: eeacms/apache:2.4-2.2
     ports:
       - "127.0.0.1:80:80"

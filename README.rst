@@ -3,44 +3,44 @@ This project contains the .yml and .env files required to run docker-compose for
 Installation guide
 ------------------
 
-1.Install `Docker Compose <https://docs.docker.com/compose/>`_ .
+1. Install `Docker Compose <https://docs.docker.com/compose/>`_ .
 
-2.Clone this project:
+2. Clone this project:
     
     git clone git@gitlab.com:ecolex/ecolex.docker.git
     
-3.Move to the directory that contains .yml files
+3. Move to the directory that contains .yml files
 
     cd ecolex.docker/ecx/
 
 Production
 ----------
 
-4.Make sure *mysql.env* and *web.env* have the right settings.
+4. Rename prod.env in .env, make sure it has the right settings.
 
-5.Create and start the containers:
+5. Create and start the containers:
 
-    docker-compose up
+    docker-compose up -d
 
 Development
 -----------
 
-4.Create *docker-compose.override.yml* from the sample file
+4. Create *docker-compose.override.yml* from the sample file
     
     cp docker-compose.override.yml.sample docker-compose.override.yml
 
-5.Set volume in web service in *docker-compose.override.yml*. It should be the absolute path to the ecolex project.
+5. Set volume in web service in *docker-compose.override.yml*. It should be the absolute path to the ecolex project.
 
-6.Set *mysql.dev.env* and *web.dev.env* files.
+6. Rename dev.env in .env.
 
-* If you want to run with **DEBUG=False**, remove the **EDW_RUN_WEB_DEBUG** variable from *web.dev.env* . 
+* If you want to run with **DEBUG=False**, remove the **EDW_RUN_WEB_DEBUG** variable from *.env* . 
 
 * Change the **EDW_RUN_SOLR_URI** if you don't want to use a local solr.
 
 
-7.Create and start the containers:
+7. Create and start the containers:
 
-    docker-compose up
+    docker-compose -f docker-compose.yml  -f docker-compose.override.yml up -d
 
 **In development, the web service runs first with the init_dev command. This command makes migrations and installs some fixtures.**
 
@@ -50,9 +50,9 @@ Development
     
     # command: init_dev
 
-8.Use local solr **(optional)**
+8. Use local solr **(optional)**
 
-8.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *web.dev.env*
+8.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
     
 8.2. Enter in the solr container:
         
