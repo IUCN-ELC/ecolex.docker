@@ -56,7 +56,7 @@ services:
     image: solr:5.5 
     container_name: ecx_solr
     ports:
-      - "8983:8983"
+      - "127.0.0.1:8983:8983"
     environment:
       TZ: ${TZ}
       EDW_RUN_SOLR_HEAP_MB: ${EDW_RUN_SOLR_HEAP_MB}
