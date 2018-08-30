@@ -68,3 +68,12 @@ Development
 8.3. Create a new core:
         
     solr create_core -c ecolex -d ecolex_initial_conf
+
+
+Updating schema.xml
+-------------------
+
+    cd ecx
+    docker cp solr/ecolex_initial_conf/conf/schema.xml ecx_solr:/opt/solr/server/solr/mycores/ecolex/conf
+    docker exec -it ecx_solr rm /opt/solr/server/solr/mycores/ecolex/conf/managed-schema
+    curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=ecolex"
