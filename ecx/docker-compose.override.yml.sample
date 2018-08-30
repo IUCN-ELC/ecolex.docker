@@ -25,7 +25,7 @@ services:
     restart: "no"
 
 
-  db:
+  maria:
     logging:
       driver: json-file
     restart: "no"
@@ -48,7 +48,7 @@ services:
 
             ProxyPass /static !
             ProxyPreserveHost On
-            ProxyPass / http://web:8000/ timeout=300 retry=0
-            ProxyPassReverse / http://web:8000/
+            ProxyPass / http://app:8000/ timeout=300 retry=0
+            ProxyPassReverse / http://app:8000/
 
          </VirtualHost>

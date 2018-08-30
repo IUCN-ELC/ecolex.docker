@@ -1,8 +1,8 @@
 version: "2"
 services:
   app:
-    image: iucn/ecolex_web:docker_major_refactoring 
-    container_name: ecx_web
+    image: iucn/ecolex_web:latest
+    container_name: ecx_app
     ports:
       - "127.0.0.1:8000:8000"
     environment:
@@ -33,7 +33,7 @@ services:
     restart: "always"
 
 
-  db:
+  maria:
     image: mariadb:10
     container_name: ecx_maria
     environment:

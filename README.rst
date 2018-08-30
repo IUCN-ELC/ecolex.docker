@@ -26,10 +26,17 @@ Development
 -----------
 
 4. Create *docker-compose.override.yml* from the sample file
-    
+
     cp docker-compose.override.yml.sample docker-compose.override.yml
 
-5. Set volume in web service in *docker-compose.override.yml*. It should be the absolute path to the ecolex project.
+5. Add docker volume for service "app" in *docker-compose.override.yml*. It should be the absolute path to the ecolex source code.
+
+    services:
+      app:
+        volumes:
+        # path to root dir of ecolex source code
+        - ../../ecolex:/home/web/ecolex
+
 
 6. Rename dev.env in .env.
 
