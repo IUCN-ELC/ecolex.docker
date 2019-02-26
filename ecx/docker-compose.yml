@@ -47,7 +47,7 @@ services:
     logging:
       driver: journald
     restart: "always"
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--query-cache-size=${EDW_RUN_MARIA_query_cache_size}", "--max-allowed-packet=${EDW_RUN_MARIA_query_cache_size}",
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--query-cache-size=${EDW_RUN_MARIA_query_cache_size}", "--max-allowed-packet=${EDW_RUN_MARIA_max_allowed_packet}",
               "--max-connections=${EDW_RUN_MARIA_max_connections}", "--max-heap-table-size=${EDW_RUN_MARIA_max_heap_table_size}", "--tmp_table_size=${EDW_RUN_MARIA_tmp_table_size}",
               "--query_cache_limit=${EDW_RUN_MARIA_query_cache_limit}", "--innodb-buffer-pool-size=${EDW_RUN_MARIA_innodb_buffer_pool_size}", "--slow-query-log=${EDW_RUN_MARIA_slow_query_log}" ,
               "--innodb-log-file-size=300M"  ]
@@ -73,6 +73,14 @@ services:
       - solr-precreate
       - ecolex 
       - /core-template/ecolex_initial_conf
+
+  mail:
+    image: eeacms/postfix
+    restart: always
+    hostname: ecolex.org
+    environment:
+    - MTP_HOST=ecolex.org
+    - MTP_DESTINATION=ecolex.org
 
 volumes:
   ecolex_solr:
