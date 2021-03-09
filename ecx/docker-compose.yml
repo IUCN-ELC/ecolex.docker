@@ -53,7 +53,7 @@ services:
               "--innodb-log-file-size=300M"  ]
 
   solr:
-    image: solr:5.5 
+    image: solr:8
     container_name: ecx_solr
     ports:
       - "127.0.0.1:8983:8983"
@@ -62,25 +62,10 @@ services:
       EDW_RUN_SOLR_HEAP_MB: ${EDW_RUN_SOLR_HEAP_MB}
       EDW_RUN_SOLR_LOG_MB: ${EDW_RUN_SOLR_LOG_MB}
     volumes:
-      - ./solr/solr_scripts/:/docker-entrypoint-initdb.d/
-      - ecolex_solr:/opt/solr/server/solr/mycores
-      - ./solr/ecolex_initial_conf:/core-template/ecolex_initial_conf:ro
+      - ./solr/data:/var/solr/data
     logging:
       driver: journald
     restart: "always"
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - ecolex 
-      - /core-template/ecolex_initial_conf
-
-  mail:
-    image: eeacms/postfix
-    restart: always
-    hostname: ecolex.org
-    environment:
-    - MTP_HOST=ecolex.org
-    - MTP_DESTINATION=ecolex.org
 
 volumes:
   ecolex_solr:
