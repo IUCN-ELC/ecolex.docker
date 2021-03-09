@@ -189,7 +189,7 @@
   <field name="docCountry_en" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="docCountry_es" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="docCountry_fr" type="string" multiValued="true" indexed="true" stored="true"/>
-  <field name="docDate" type="tdate" multiValued="false" indexed="true" stored="true"/>
+  <field name="docDate" type="tdate" multiValued="false" indexed="true" stored="true" docValues="true"/>
   <field name="docEntryDate" type="tdate" multiValued="false" indexed="true" stored="true"/>
   <field name="docId" type="text" multiValued="false" indexed="true" stored="true"/>
   <field name="docKeyword_en" type="string" multiValued="true" indexed="true" stored="true"/>
