@@ -2,15 +2,18 @@ version: "2"
 services:
   app:
     image: iucn/ecolex_web:latest
-    container_name: ecx_app
+    container_name: ecolex_prod_app
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:7270:8000"
     environment:
       TZ: ${TZ}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       EDW_RUN_SOLR_URI: ${EDW_RUN_SOLR_URI}
+      SOLR_HOST: ${SOLR_HOST}
+      SOLR_PORT: ${SOLR_PORT}
       EDW_RUN_WEB_ECOLEX_CODE: ${EDW_RUN_WEB_ECOLEX_CODE}
       EDW_RUN_WEB_FAOLEX_API_KEY: ${EDW_RUN_WEB_FAOLEX_API_KEY}
       EDW_RUN_WEB_FAOLEX_CODE: ${EDW_RUN_WEB_FAOLEX_CODE}
@@ -22,54 +25,9 @@ services:
       EDW_RUN_WEB_SENTRY_DSN: ${EDW_RUN_WEB_SENTRY_DSN}
       EDW_RUN_WEB_SENTRY_PUBLIC_DSN: ${EDW_RUN_WEB_SENTRY_PUBLIC_DSN}
       EDW_RUN_WEB_STATIC_ROOT: ${EDW_RUN_WEB_STATIC_ROOT}
-    depends_on:
-      - solr
-      - maria
     volumes:
       - ../www_ecolex_static:/www_static
       - ../web_logs:/home/web/ecolex/logs
     logging:
       driver: journald
     restart: "always"
-
-
-  maria:
-    image: mariadb:10
-    container_name: ecx_maria
-    environment:
-      TZ: ${TZ}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER} 
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    volumes:
-      - ecolex_db_maria:/var/lib/mysql
-    logging:
-      driver: journald
-    restart: "always"
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--query-cache-size=${EDW_RUN_MARIA_query_cache_size}", "--max-allowed-packet=${EDW_RUN_MARIA_max_allowed_packet}",
-              "--max-connections=${EDW_RUN_MARIA_max_connections}", "--max-heap-table-size=${EDW_RUN_MARIA_max_heap_table_size}", "--tmp_table_size=${EDW_RUN_MARIA_tmp_table_size}",
-              "--query_cache_limit=${EDW_RUN_MARIA_query_cache_limit}", "--innodb-buffer-pool-size=${EDW_RUN_MARIA_innodb_buffer_pool_size}", "--slow-query-log=${EDW_RUN_MARIA_slow_query_log}" ,
-              "--innodb-log-file-size=300M"  ]
-
-  solr:
-    image: solr:8
-    container_name: ecx_solr
-    ports:
-      - "127.0.0.1:8983:8983"
-    environment:
-      TZ: ${TZ}
-      EDW_RUN_SOLR_HEAP_MB: ${EDW_RUN_SOLR_HEAP_MB}
-      EDW_RUN_SOLR_LOG_MB: ${EDW_RUN_SOLR_LOG_MB}
-    volumes:
-      - ./solr/data:/var/solr/data
-    logging:
-      driver: journald
-    restart: "always"
-
-volumes:
-  ecolex_solr:
-    driver: local
-  ecolex_db_maria:
-    driver: local
-
