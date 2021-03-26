@@ -1,0 +1,116 @@
+## http redirects
+
+server {
+    server_name ecolex.org www.ecolex.org;
+    listen 80;
+
+    include /etc/nginx/conf.d/snippets/letsencrypt.conf;
+
+    location /ecolex {
+        rewrite ^/ecolex/index.php(.*)$ https://www.ecolex.org/? permanent;
+        rewrite ^/ecolex/$ https://www.ecolex.org/? permanent;
+        rewrite ^/ecolex/ledge/view/$ https://www.ecolex.org/result/? permanent;
+        rewrite ^/ecolex/ledge/view/SimpleSearch(.*) https://www.ecolex.org/result/? permanent;
+        rewrite ^/ecolex/ledge/view/SearchResults(.*) https://www.ecolex.org/result/? permanent;
+        rewrite ^/ecolex/ledge/view/CourtDecisions(.*) https://www.ecolex.org/result/?type=court_decision? permanent;
+        rewrite ^/ecolex/ledge/view/Literature(.*) https://www.ecolex.org/result/?type=literature? permanent;
+        rewrite ^/ecolex/ledge/view/Legislation(.*) https://www.ecolex.org/result/?type=legislation? permanent;
+        rewrite ^/ecolex/ledge/view/Treaties(.*) https://www.ecolex.org/result/?type=treaty? permanent;
+        rewrite ^/ecolex/ledge/view/Common(.*) https://www.ecolex.org/? permanent;
+        rewrite ^/ecolex/ledge/view/Acknowledgements_en_US(.*) https://www.ecolex.org/p/acknowledgements/? permanent;
+        rewrite ^/ecolex/ledge/view/Acknowledgements_es_ES(.*) https://www.ecolex.org/es/p/acknowledgements/? permanent;
+        rewrite ^/ecolex/ledge/view/Acknowledgements_fr_FR(.*) https://www.ecolex.org/fr/p/acknowledgements/? permanent;
+        rewrite ^/ecolex/ledge/view/About_en_US(.*) https://www.ecolex.org/p/about/? permanent;
+        rewrite ^/ecolex/ledge/view/About_es_ES(.*) https://www.ecolex.org/es/p/about/? permanent;
+        rewrite ^/ecolex/ledge/view/About_fr_FR(.*) https://www.ecolex.org/fr/p/about/? permanent;
+        rewrite ^/ecolex/ledge/view/UserAgreement_en_US(.*) https://www.ecolex.org/p/agreement/? permanent;
+        rewrite ^/ecolex/ledge/view/UserAgreement_es_ES(.*) https://www.ecolex.org/es/p/agreement/? permanent;
+        rewrite ^/ecolex/ledge/view/UserAgreement_fr_FR(.*) https://www.ecolex.org/fr/p/agreement/? permanent;
+        rewrite ^/ecolex/ledge/view/Privacy_en_US(.*) https://www.ecolex.org/p/privacy/? permanent;
+        rewrite ^/ecolex/ledge/view/Privacy_es_ES(.*) https://www.ecolex.org/es/p/privacy/? permanent;
+        rewrite ^/ecolex/ledge/view/Privacy_fr_FR(.*) https://www.ecolex.org/fr/p/privacy/? permanent;
+    }
+
+    location /es/details {
+        rewrite ^/es/details$ https://www.ecolex.org/details? permanent;
+    }
+
+    location /fr/details {
+        rewrite ^/fr/details$ https://www.ecolex.org/details? permanent;
+    }
+
+    location /server2 {
+        rewrite ^/server2.php(.*)$ http://www2.ecolex.org/server2.php$1 permanent;
+    }
+
+    location /server2neu {
+        rewrite ^/server2neu.php(.*)$ http://www2.ecolex.org/server2neu.php$1 permanent;
+    }
+
+    location /elis_isis3w {
+        rewrite ^/elis_isis3w.php(.*)$ http://www2.ecolex.org/elis_isis3w.php$1 permanent;
+    }
+
+    location /start {
+        rewrite ^/start.php https://www.ecolex.org/ permanent;
+    }
+
+    location /index {
+        rewrite ^/index.*.php$ https://www.ecolex.org/ permanent;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+
+## https redirects and settings
+
+server {
+    listen       443 http2 ssl;
+    server_name  www.ecolex.org;
+
+    index index.php;
+
+    gzip on;
+    gzip_types text/plain text/xml text/css text/javascript application/x-javascript application/json;
+
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+    add_header X-Frame-Options "ALLOWALL" always;
+    add_header Referrer-Policy "unsafe-url" always;
+    add_header Content-Security-Policy "script-src 'self' https://d3js.org https://datamaps.github.io https://www.google-analytics.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleap
+is.com 'unsafe-inline'; img-src 'self' https://www.google-analytics.com; font-src 'self' https://fonts.gstatic.com;" always;
+    server_tokens off;
+
+# change to the google file 
+    location ~ ^/googled.html {
+       alias /var/local/www.ecolex.org/web/;
+    }
+
+    location /es/details {
+        rewrite ^/es/details$ https://www.ecolex.org/details? permanent;
+    }
+
+    location /fr/details {
+        rewrite ^/fr/details$ https://www.ecolex.org/details? permanent;
+    }
+
+    location /server2 {
+        rewrite ^/server2.php(.*)$ http://www2.ecolex.org/server2.php$1 permanent;
+    }
+
+    location /server2neu {
+        rewrite ^/server2neu.php(.*)$ http://www2.ecolex.org/server2neu.php$1 permanent;
+    }
+
+    location /elis_isis3w {
+        rewrite ^/elis_isis3w.php(.*)$ http://www2.ecolex.org/elis_isis3w.php$1 permanent;
+    }
+
+}
+
+
+
