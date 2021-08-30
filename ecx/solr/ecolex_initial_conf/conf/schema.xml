@@ -3,17 +3,16 @@
 <schema name="ecolex" version="1.1">
   <uniqueKey>id</uniqueKey>
   <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
-  <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
-  <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
-  <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="double" class="solr.DoublePointField" positionIncrementGap="0"/>
+  <fieldType name="int" class="solr.IntPointField" positionIncrementGap="0"/>
+  <fieldType name="long" class="solr.LongPointField" positionIncrementGap="0"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>
-  <fieldType name="tdate" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="tdate" class="solr.DatePointField" positionIncrementGap="0"/>
 
   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
       <filter class="solr.ASCIIFoldingFilterFactory"/>
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StandardFilterFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
     <analyzer type="query">
@@ -48,7 +47,6 @@
     <analyzer type="index">
       <charFilter class="solr.HTMLStripCharFilterFactory"/>
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StandardFilterFactory"/>
       <filter class="solr.LowerCaseFilterFactory"/>
     </analyzer>
     <analyzer type="query">
@@ -191,7 +189,7 @@
   <field name="docCountry_en" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="docCountry_es" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="docCountry_fr" type="string" multiValued="true" indexed="true" stored="true"/>
-  <field name="docDate" type="tdate" multiValued="false" indexed="true" stored="true"/>
+  <field name="docDate" type="tdate" multiValued="false" indexed="true" stored="true" docValues="true"/>
   <field name="docEntryDate" type="tdate" multiValued="false" indexed="true" stored="true"/>
   <field name="docId" type="text" multiValued="false" indexed="true" stored="true"/>
   <field name="docKeyword_en" type="string" multiValued="true" indexed="true" stored="true"/>

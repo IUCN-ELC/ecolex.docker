@@ -16,11 +16,32 @@ Installation guide
 Production
 ----------
 
-4. Rename prod.env in .env, make sure it has the right settings.
+4. Install Solr 8 and MariaDB 10
 
-5. Create and start the containers:
+5. Copy the contents of solr/ecolex_initial_conf to the solr.home/data/ecolex to create the core, or in the case of an upgrade/server move use the https://github.com/freedev/solr-import-export-json tool to export the current core and import it to the new server. Keep in mind that when importing all the <copyField ... /> entries in the schema.xml file will have to be commented out to avoid import errors (because the export already contains the values for these fields, they don't have to be copied again). After the import uncomment the fields in the schema and restart Solr.
+
+6. Rename prod.env in .env, make sure it has the right settings.
+
+7. Create and start the containers:
 
     docker-compose up -d
+
+8. Setup nginx to serve static files and do redirects:
+
+ * Add a proxy to the application port
+
+    location / {
+      include conf.d/snippets/proxy.conf;
+      proxy_pass http://localhost:7270;
+    }
+
+ * Map the /static path to the www_ecolex_static directory (the same one that is mapped in docker-compose for the app service as /www_static 
+
+    location /static/ {
+        alias /www_ecolex_static/;
+    }
+
+ * Check the redirects.txt file for the mappings to be added to the nginx configuration (legacy paths support). 
 
 Development
 -----------

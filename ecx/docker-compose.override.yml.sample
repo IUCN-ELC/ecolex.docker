@@ -4,12 +4,14 @@ version: "2"
 services:
   app:
     image: iucn/ecolex_web:latest
+#   use this path to point to the ecolex application root
+#    build: ../../ecolex
     ports:
-      - "127.0.0.1:8000:8000"
+      - "8001:8000"
     # Comment both commands below and edit web.dev.env to run with DEBUG=false
     command: debug
     # Use the command below only once ( it makes migrations and installs some fixtures)
-    # command: init_dev
+    command: init_dev
     tty: true
     stdin_open: true
     volumes:
@@ -19,21 +21,51 @@ services:
       driver: json-file
     restart: "no"
 
+
   solr:
+    image: solr:8
+    container_name: ecx_solr
+    ports:
+      - "8984:8983"
+    environment:
+      TZ: ${TZ}
+      EDW_RUN_SOLR_HEAP_MB: ${EDW_RUN_SOLR_HEAP_MB}
+      EDW_RUN_SOLR_LOG_MB: ${EDW_RUN_SOLR_LOG_MB}
+# copy the ecolex_initial_conf data to solr/data/ecolex
+    volumes:
+      - ./solr/data:/var/solr/data
     logging:
       driver: json-file
     restart: "no"
-
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - ecolex 
+      - /core-template/ecolex_initial_conf
 
   maria:
+    image: mariadb:10
+    container_name: ecx_maria
+    environment:
+      TZ: ${TZ}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER} 
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ecolex_db_maria:/var/lib/mysql
     logging:
       driver: json-file
     restart: "no"
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--query-cache-size=${EDW_RUN_MARIA_query_cache_size}", "--max-allowed-packet=${EDW_RUN_MARIA_max_allowed_packet}",
+              "--max-connections=${EDW_RUN_MARIA_max_connections}", "--max-heap-table-size=${EDW_RUN_MARIA_max_heap_table_size}", "--tmp_table_size=${EDW_RUN_MARIA_tmp_table_size}",
+              "--query_cache_limit=${EDW_RUN_MARIA_query_cache_limit}", "--innodb-buffer-pool-size=${EDW_RUN_MARIA_innodb_buffer_pool_size}", "--slow-query-log=${EDW_RUN_MARIA_slow_query_log}" ,
+              "--innodb-log-file-size=300M"  ]
 
   static:
     image: eeacms/apache:2.4-2.2
     ports:
-      - "127.0.0.1:80:80"
+      - "81:80"
     volumes:
       - ./www_ecolex_static:/var/local/ecolex/www_ecolex_static:ro
     environment:
@@ -52,3 +84,7 @@ services:
             ProxyPassReverse / http://app:8000/
 
          </VirtualHost>
+
+volumes:
+  ecolex_db_maria:
+    driver: local
