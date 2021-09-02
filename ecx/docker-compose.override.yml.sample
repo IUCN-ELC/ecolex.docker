@@ -12,6 +12,11 @@ services:
     command: debug
     # Use the command below only once ( it makes migrations and installs some fixtures)
     command: init_dev
+    # Use the command below to start the server manually in container
+    # entrypoint: []
+    # command: ["tail", "-f", "/dev/null"]
+    # environment:
+    #  EDW_RUN_WEB_DEBUG: 1
     tty: true
     stdin_open: true
     volumes:
@@ -61,29 +66,6 @@ services:
               "--max-connections=${EDW_RUN_MARIA_max_connections}", "--max-heap-table-size=${EDW_RUN_MARIA_max_heap_table_size}", "--tmp_table_size=${EDW_RUN_MARIA_tmp_table_size}",
               "--query_cache_limit=${EDW_RUN_MARIA_query_cache_limit}", "--innodb-buffer-pool-size=${EDW_RUN_MARIA_innodb_buffer_pool_size}", "--slow-query-log=${EDW_RUN_MARIA_slow_query_log}" ,
               "--innodb-log-file-size=300M"  ]
-
-  static:
-    image: eeacms/apache:2.4-2.2
-    ports:
-      - "81:80"
-    volumes:
-      - ./www_ecolex_static:/var/local/ecolex/www_ecolex_static:ro
-    environment:
-       APACHE_CONFIG: |-
-         <VirtualHost *:80>
-            ServerName ecolex.local
-
-            Alias /static /var/local/ecolex/www_ecolex_static
-            <Directory /var/local/ecolex/www_ecolex_static>
-              Require all granted
-            </Directory>
-
-            ProxyPass /static !
-            ProxyPreserveHost On
-            ProxyPass / http://app:8000/ timeout=300 retry=0
-            ProxyPassReverse / http://app:8000/
-
-         </VirtualHost>
 
 volumes:
   ecolex_db_maria:

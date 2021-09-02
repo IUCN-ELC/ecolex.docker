@@ -78,6 +78,19 @@ Development
     
     # command: init_dev
 
+**An alternative:**
+
+* You can start the server manually to have more control in development.
+
+* In order to do this, you have to comment "debug" and "init_dev" commands and uncomment the lines from docker-compose.override.yml dedicated to this.
+
+* After the containers are up and running, start the server manually:
+
+    docker exec -it ecolex_prod_app bash
+
+    ./manage.py runserver 0:8000
+
+
 8. Use local solr **(optional)**
 
 8.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
