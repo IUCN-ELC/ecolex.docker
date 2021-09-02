@@ -15,8 +15,6 @@ services:
     # Use the command below to start the server manually in container
     # entrypoint: []
     # command: ["tail", "-f", "/dev/null"]
-    # environment:
-    #  EDW_RUN_WEB_DEBUG: 1
     tty: true
     stdin_open: true
     volumes:
