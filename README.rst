@@ -58,25 +58,15 @@ Development
         # path to root dir of ecolex source code
         - ../../ecolex:/home/web/ecolex
 
-6. Add docker volume for service "solr" in *docker-compose.override.yml*.
-
-    services:
-      solr:
-        volumes:
-        - ./solr/data:/var/solr/data
-        - ./solr/ecolex_initial_conf:/core-template/ecolex_initial_conf
-
-7. Rename dev.env in .env.
+6. Rename dev.env in .env.
 
 * If you want to run with **DEBUG=False**, remove the **EDW_RUN_WEB_DEBUG** variable from *.env* . 
 
 * Change the **EDW_RUN_SOLR_URI** if you don't want to use a local solr.
 
-8. Change solr/data directory permissions:
+7. mkdir -p ./solr/data && chown 8983:8983 ./solr/data/
 
-    chown 8983:8983 ./solr/data/
-
-9. Create and start the containers:
+8. Create and start the containers:
 
     docker-compose -f docker-compose.yml  -f docker-compose.override.yml up -d
 
@@ -101,15 +91,13 @@ Development
     ./manage.py runserver 0:8000
 
 
-10. Use local solr **(optional)**
+9.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
 
-10.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
-
-10.2. Enter in the solr container:
+9.2. Enter in the solr container:
         
     docker exec -it ecx_solr bash
     
-10.3. Create a new core:
+9.3. Create a new core:
         
     solr create_core -c ecolex -d /core-template/ecolex_initial_conf
 
@@ -129,8 +117,10 @@ Restoring data
     docker cp [backup_filename].sql ecx_maria:/
     docker exec -it ecx_maria mysql -u ecolex -p ecolex < [backup_filename].sql
     
-    rm -rf ./solr/data/ecolex/index/*
-    mv [snapshot_dir]/* ./solr/data/ecolex/index/
+    rm -rf ./solr/data/ecolex/data/index/*
+    mv [snapshot_dir]/* ./solr/data/ecolex/data/index/
+
+**[snapshot_dir]: The name of the backed up snapshot to be restored, created after http://localhost:8983/solr/[core_name]/replication?command=backup**
 
     docker-compose restart
 

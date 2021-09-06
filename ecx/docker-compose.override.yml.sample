@@ -8,13 +8,12 @@ services:
 #    build: ../../ecolex
     ports:
       - "8001:8000"
-    # Comment both commands below and edit web.dev.env to run with DEBUG=false
-    command: debug
+    # command: debug
     # Use the command below only once ( it makes migrations and installs some fixtures)
-    command: init_dev
+    # command: init_dev
     # Use the command below to start the server manually in container
-    # entrypoint: []
-    # command: ["tail", "-f", "/dev/null"]
+    entrypoint: []
+    command: ["tail", "-f", "/dev/null"]
     tty: true
     stdin_open: true
     volumes:
@@ -37,6 +36,9 @@ services:
 # copy the ecolex_initial_conf data to solr/data/ecolex
     volumes:
       - ./solr/data:/var/solr/data
+      - ./solr/ecolex_initial_conf:/core-template/ecolex_initial_conf
+      - ./solr/.logs:/var/solr/logs
+      - ./solr/.tmp:/tmp
     logging:
       driver: json-file
     restart: "no"
