@@ -7,7 +7,7 @@ Installation guide
 
 2. Clone this project:
     
-    git clone https://github.com/IUCN-ELC/ecolex.docker.git
+    git clone git@github.com:IUCN-ELC/ecolex.docker.git
     
 3. Move to the directory that contains .yml files
 
