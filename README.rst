@@ -3,11 +3,11 @@ This project contains the .yml and .env files required to run docker-compose for
 Installation guide
 ------------------
 
-1. Install `Docker Compose <https://docs.docker.com/compose/>`_ .
+1. Install docker.io and `Docker Compose <https://docs.docker.com/compose/>`_ .
 
 2. Clone this project:
     
-    git clone git@gitlab.com:ecolex/ecolex.docker.git
+    git clone git@github.com:IUCN-ELC/ecolex.docker.git
     
 3. Move to the directory that contains .yml files
 
@@ -58,15 +58,15 @@ Development
         # path to root dir of ecolex source code
         - ../../ecolex:/home/web/ecolex
 
-
 6. Rename dev.env in .env.
 
 * If you want to run with **DEBUG=False**, remove the **EDW_RUN_WEB_DEBUG** variable from *.env* . 
 
 * Change the **EDW_RUN_SOLR_URI** if you don't want to use a local solr.
 
+7. mkdir -p ./solr/data && chown 8983:8983 ./solr/data/
 
-7. Create and start the containers:
+8. Create and start the containers:
 
     docker-compose -f docker-compose.yml  -f docker-compose.override.yml up -d
 
@@ -91,23 +91,36 @@ Development
     ./manage.py runserver 0:8000
 
 
-8. Use local solr **(optional)**
+9.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
 
-8.1. Make sure **EDW_RUN_SOLR_URI=http://solr:8983/solr/ecolex** in *.env*
-    
-8.2. Enter in the solr container:
+9.2. Enter in the solr container:
         
     docker exec -it ecx_solr bash
     
-8.3. Create a new core:
+9.3. Create a new core:
         
-    solr create_core -c ecolex -d ecolex_initial_conf
+    solr create_core -c ecolex -d /core-template/ecolex_initial_conf
 
 
 Updating schema.xml
 -------------------
 
     cd ecx
-    docker cp solr/ecolex_initial_conf/conf/schema.xml ecx_solr:/opt/solr/server/solr/mycores/ecolex/conf
-    docker exec -it ecx_solr rm /opt/solr/server/solr/mycores/ecolex/conf/managed-schema
+    docker cp solr/ecolex_initial_conf/conf/schema.xml ecx_solr:/var/solr/data/ecolex/conf
+    docker exec -it ecx_solr rm /var/solr/data/ecolex/conf/managed-schema
     curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=ecolex"
+
+
+Restoring data
+--------------
+    cd ecx
+    docker cp [backup_filename].sql ecx_maria:/
+    docker exec -it ecx_maria mysql -u ecolex -p ecolex < [backup_filename].sql
+    
+    rm -rf ./solr/data/ecolex/data/index/*
+    mv [snapshot_dir]/* ./solr/data/ecolex/data/index/
+
+**[snapshot_dir]: The name of the backed up snapshot to be restored, created after http://localhost:8983/solr/[core_name]/replication?command=backup**
+
+    docker-compose restart
+
