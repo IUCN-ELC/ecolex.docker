@@ -26,6 +26,9 @@ services:
       EDW_RUN_WEB_SENTRY_PUBLIC_DSN: ${EDW_RUN_WEB_SENTRY_PUBLIC_DSN}
       EDW_RUN_WEB_STATIC_ROOT: ${EDW_RUN_WEB_STATIC_ROOT}
       EDW_RUN_WEB_DEBUG: ${EDW_RUN_WEB_DEBUG}
+      DOC_URL: ${DOC_URL}
+      HTML_URL: ${HTML_URL}
+      PDF_URL: ${PDF_URL}
     volumes:
       - ../www_ecolex_static:/www_static
       - ../web_logs:/home/web/ecolex/logs
