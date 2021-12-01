@@ -1,0 +1,8 @@
+# This file is meant to override docker-compose.yml
+# on the other hand environment variables overrides this file.
+version: "2"
+services:
+  app:
+    image: iucn/ecolex_web:20210701
+    ports:
+      - "127.0.0.1:8000:8000"

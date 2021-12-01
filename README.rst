@@ -20,7 +20,7 @@ Production
 
 5. Copy the contents of solr/ecolex_initial_conf to the solr.home/data/ecolex to create the core, or in the case of an upgrade/server move use the https://github.com/freedev/solr-import-export-json tool to export the current core and import it to the new server. Keep in mind that when importing all the <copyField ... /> entries in the schema.xml file will have to be commented out to avoid import errors (because the export already contains the values for these fields, they don't have to be copied again). After the import uncomment the fields in the schema and restart Solr.
 
-6. Rename prod.env in .env, make sure it has the right settings.
+6. Rename .env.example in .env, make sure it has the right settings.
 
 7. Create and start the containers:
 
@@ -48,7 +48,7 @@ Development
 
 4. Create *docker-compose.override.yml* from the sample file
 
-    cp docker-compose.override.yml.sample docker-compose.override.yml
+    cp docker-compose.override.yml.example docker-compose.override.yml
 
 5. Add docker volume for service "app" in *docker-compose.override.yml*. It should be the absolute path to the ecolex source code.
 
@@ -58,9 +58,9 @@ Development
         # path to root dir of ecolex source code
         - ../../ecolex:/home/web/ecolex
 
-6. Rename dev.env in .env.
+6. Rename .env.example in .env.
 
-* If you want to run with **DEBUG=False**, remove the **EDW_RUN_WEB_DEBUG** variable from *.env* . 
+* If you want to run with **DEBUG=False**, edit the **EDW_RUN_WEB_DEBUG** variable from *.env* . 
 
 * Change the **EDW_RUN_SOLR_URI** if you don't want to use a local solr.
 
