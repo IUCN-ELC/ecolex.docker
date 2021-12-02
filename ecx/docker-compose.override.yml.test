@@ -9,33 +9,41 @@ services:
 
   solr8:
     image: library/solr:8
-    container_name: ecx_solr
+    container_name: ecolex_solr
     environment:
       SOLR_JAVA_MEM: "-Xms512m -Xmx4g"
       TZ: ${TZ}
     volumes:
-      - ecolex_solr:/var/solr/data
+      - solr_data:/var/solr/
+      - solr_tmp:/tmp
       - ./solr/ecolex_initial_conf:/core-template/ecolex_initial_conf:ro
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - ecolex 
-      - /core-template/ecolex_initial_conf
+
+    user: root
+    command: bash -c "
+      chown -R 8983:8983 /var/solr
+      && runuser -u solr -- solr-precreate ecolex /core-template/ecolex_initial_conf"
+
+    #entrypoint:
+    #  - docker-entrypoint.sh
+    #  - solr-precreate
+    #  - ecolex
+    #  - /core-template/ecolex_initial_conf
+
     ports:
-      - "127.0.0.1:8983:8983" 
+      - "127.0.0.1:8983:8983"
     logging:
         options:
             max-size: "10m"
-            max-file: "3" 
+            max-file: "3"
     restart: "unless-stopped"
 
   maria:
     image: mariadb:10
-    container_name: ecx_db
+    container_name: ecolex_db
     environment:
       TZ: ${TZ}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER} 
+      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
@@ -60,5 +68,8 @@ volumes:
   ecolex_db:
     driver: local
 
-  ecolex_solr:
+  solr_data:
+    driver: local
+
+  solr_tmp:
     driver: local
