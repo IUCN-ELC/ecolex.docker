@@ -1,8 +1,101 @@
-# This file is meant to override docker-compose.yml
-# on the other hand environment variables overrides this file.
-version: "2"
+version: "3.2"
+
 services:
+
   app:
-    image: iucn/ecolex_web:20210701
+    image: iucn/ecolex_web:20211226
+    container_name: ecolex_app
     ports:
       - "127.0.0.1:8000:8000"
+    environment:
+      TZ: ${TZ}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      EDW_RUN_SOLR_URI: ${EDW_RUN_SOLR_URI}
+      SOLR_HOST: ${SOLR_HOST}
+      SOLR_PORT: ${SOLR_PORT}
+      EDW_RUN_WEB_ECOLEX_CODE: ${EDW_RUN_WEB_ECOLEX_CODE}
+      EDW_RUN_WEB_FAOLEX_API_KEY: ${EDW_RUN_WEB_FAOLEX_API_KEY}
+      EDW_RUN_WEB_FAOLEX_CODE: ${EDW_RUN_WEB_FAOLEX_CODE}
+      EDW_RUN_WEB_FAOLEX_CODE_2: ${EDW_RUN_WEB_FAOLEX_CODE_2}
+      EDW_RUN_WEB_FAOLEX_ENABLED: ${EDW_RUN_WEB_FAOLEX_ENABLED}
+      EDW_RUN_WEB_INFORMEA_CODE: ${EDW_RUN_WEB_INFORMEA_CODE}
+      EDW_RUN_WEB_PORT: ${EDW_RUN_WEB_PORT}
+      EDW_RUN_WEB_SECRET_KEY: ${EDW_RUN_WEB_SECRET_KEY}
+      EDW_RUN_WEB_SENTRY_DSN: ${EDW_RUN_WEB_SENTRY_DSN}
+      EDW_RUN_WEB_SENTRY_PUBLIC_DSN: ${EDW_RUN_WEB_SENTRY_PUBLIC_DSN}
+      EDW_RUN_WEB_STATIC_ROOT: ${EDW_RUN_WEB_STATIC_ROOT}
+      EDW_RUN_WEB_DEBUG: ${EDW_RUN_WEB_DEBUG}
+      DOC_URL: ${DOC_URL}
+      HTML_URL: ${HTML_URL}
+      PDF_URL: ${PDF_URL}
+    volumes:
+      - ../www_ecolex_static:/www_static
+      - ../web_logs:/home/web/ecolex/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+      driver: json-file
+    restart: "unless-stopped"
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.0.2
+
+  solr8:
+    image: library/solr:8
+    container_name: ecolex_solr
+    restart: "unless-stopped"
+    environment:
+      SOLR_JAVA_MEM: "-Xms512m -Xmx4g"
+    volumes:
+      - solr8-cores:/var/solr/data
+    ports:
+      - 127.0.0.1:8983:8983
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.0.3
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mariadb:
+    image: mariadb:10.4.25
+    container_name: ecolex_db
+    restart: 'unless-stopped'
+    volumes:
+      - /var/lib/docker/volumes/ecolex_mariadb:/var/lib/mysql/
+
+    command: ["--character-set-server=utf8mb4",
+              "--collation-server=utf8mb4_unicode_ci",
+              "--query-cache-size=128M",
+              "--max-allowed-packet=256M",
+              "--max-connections=256",
+              "--max-heap-table-size=128M",
+              "--tmp_table_size=128M",
+              "--query_cache_limit=6M",
+              "--innodb-buffer-pool-size=1024M",
+              "--slow-query-log=1" ,
+              "--innodb-log-file-size=300M"
+              ]
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.0.4
+
+networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+
+volumes:
+  solr8-cores:

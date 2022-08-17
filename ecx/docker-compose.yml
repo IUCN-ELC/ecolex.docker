@@ -34,4 +34,4 @@ services:
       - ../web_logs:/home/web/ecolex/logs
     logging:
       driver: journald
-    restart: "always"
+    restart: "unless-stopped"
