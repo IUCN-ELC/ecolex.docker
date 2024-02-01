@@ -31,6 +31,7 @@ services:
       DOC_URL: ${DOC_URL}
       HTML_URL: ${HTML_URL}
       PDF_URL: ${PDF_URL}
+      GUNICORN_CMD_ARGS: "--workers=4 --threads=4"
     volumes:
       - ../www_ecolex_static:/www_static
       - ../web_logs:/home/web/ecolex/logs
